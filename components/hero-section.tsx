@@ -31,16 +31,16 @@ export default function HeroSection() {
           prestations haut de gamme
         </p>
 
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md sm:max-w-none px-4 sm:px-0">
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row gap-3 sm:gap-4 px-4 sm:px-0">
           <Link
             href="/contact"
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gold text-cream font-medium tracking-wide rounded-full hover:bg-gold-dark transition-all hover:scale-105 text-center"
+            className="px-8 py-4 bg-gold text-cream font-medium tracking-wide rounded-full hover:bg-gold-dark transition-all hover:scale-105"
           >
             Demander un Devis
           </Link>
           <Link
             href="/gite"
-            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-medium tracking-wide rounded-full hover:bg-white hover:text-slate transition-all text-center"
+            className="px-8 py-4 border-2 border-white text-white font-medium tracking-wide rounded-full hover:bg-white hover:text-slate transition-all"
           >
             Découvrir le Gîte
           </Link>

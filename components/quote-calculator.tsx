@@ -133,26 +133,28 @@ export default function QuoteCalculator() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* Progress Steps */}
-      <div className="flex items-center justify-center mb-8 sm:mb-12 overflow-x-auto pb-2">
-        {steps.map((step, index) => (
-          <div key={step.id} className="flex items-center flex-shrink-0">
-            <button
-              onClick={() => setCurrentStep(step.id)}
-              className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full transition-all ${currentStep === step.id
-                ? "bg-gold text-cream"
-                : currentStep > step.id
-                  ? "bg-gold/20 text-gold"
-                  : "bg-cream text-taupe"
-                }`}
-            >
-              <step.icon className="w-4 h-4 flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{step.title}</span>
-            </button>
-            {index < steps.length - 1 && (
-              <div className={`w-6 sm:w-12 h-0.5 mx-1 sm:mx-2 flex-shrink-0 ${currentStep > step.id ? "bg-gold" : "bg-border"}`} />
-            )}
-          </div>
-        ))}
+      <div className="mb-8 sm:mb-12 overflow-x-auto px-4 sm:px-0 -mx-4 sm:mx-0">
+        <div className="flex items-center justify-center min-w-max px-4 sm:px-0">
+          {steps.map((step, index) => (
+            <div key={step.id} className="flex items-center flex-shrink-0">
+              <button
+                onClick={() => setCurrentStep(step.id)}
+                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-full transition-all whitespace-nowrap ${currentStep === step.id
+                  ? "bg-gold text-cream"
+                  : currentStep > step.id
+                    ? "bg-gold/20 text-gold"
+                    : "bg-cream text-taupe"
+                  }`}
+              >
+                <step.icon className="w-4 h-4 flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-medium">{step.title}</span>
+              </button>
+              {index < steps.length - 1 && (
+                <div className={`w-4 sm:w-12 h-0.5 mx-1 sm:mx-2 flex-shrink-0 ${currentStep > step.id ? "bg-gold" : "bg-border"}`} />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Form Card */}
