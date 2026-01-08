@@ -1,15 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Calendar, Users, Sparkles, Check, ChevronRight, ChevronLeft, FileText, User, Loader2 } from "lucide-react"
+import { Calendar, Users, Check, ChevronRight, ChevronLeft, FileText, User, Loader2 } from "lucide-react"
 import { useGenerateContract, type ContractData } from "@/hooks/useGenerateContract"
 import { useSanityAvailability, useSanityQuote } from "@/hooks/useSanityCalendar"
 
 const steps = [
   { id: 1, title: "Dates", icon: Calendar },
   { id: 2, title: "Voyageurs", icon: Users },
-  { id: 3, title: "Options", icon: Sparkles },
-  { id: 4, title: "Vos infos", icon: User },
+  { id: 3, title: "Vos infos", icon: User },
 ]
 
 // Fonction pour formater les dates sans décalage de fuseau horaire
@@ -95,8 +94,6 @@ export default function QuoteCalculator() {
       case 2:
         return adults > 0 && adults + children <= 6
       case 3:
-        return true
-      case 4:
         return (
           clientFirstName.trim() !== "" &&
           clientLastName.trim() !== "" &&
@@ -138,12 +135,18 @@ export default function QuoteCalculator() {
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center flex-shrink-0">
               <button
-                onClick={() => setCurrentStep(step.id)}
+                onClick={() => {
+                  // Allow clicking on current step or previous completed steps
+                  if (step.id <= currentStep) {
+                    setCurrentStep(step.id)
+                  }
+                }}
+                disabled={step.id > currentStep}
                 className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-full transition-all whitespace-nowrap ${currentStep === step.id
                   ? "bg-gold text-cream"
                   : currentStep > step.id
-                    ? "bg-gold/20 text-gold"
-                    : "bg-cream text-taupe"
+                    ? "bg-gold/20 text-gold cursor-pointer hover:bg-gold/30"
+                    : "bg-cream text-taupe opacity-50 cursor-not-allowed"
                   }`}
               >
                 <step.icon className="w-4 h-4 flex-shrink-0" />
@@ -354,40 +357,8 @@ export default function QuoteCalculator() {
           </div>
         )}
 
-        {/* Step 3: Options */}
+        {/* Step 3: Client Information */}
         {currentStep === 3 && (
-          <div className="space-y-6 sm:space-y-8">
-            <h3 className="font-serif text-xl sm:text-2xl text-slate mb-6">Inclus dans votre séjour</h3>
-            <div className="space-y-4">
-              <div className="p-6 rounded-xl border-2 border-gold bg-gold/5">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gold flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-cream" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-slate">Accès Jacuzzi Privatif</p>
-                    <p className="text-sm text-taupe">Jacuzzi 6 places inclus gratuitement</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6 rounded-xl border-2 border-border bg-cream/50">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
-                    <Check className="w-5 h-5 text-gold" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-slate">Également inclus</p>
-                    <p className="text-sm text-taupe">Ménage fin de séjour • Taxe de séjour • Linge fourni • WiFi</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Step 4: Client Information */}
-        {currentStep === 4 && (
           <div className="space-y-6 sm:space-y-8">
             <h3 className="font-serif text-xl sm:text-2xl text-slate mb-6">Vos coordonnées</h3>
             <p className="text-taupe text-sm mb-6">
@@ -455,7 +426,7 @@ export default function QuoteCalculator() {
         )}
 
         {/* Quote Summary */}
-        {quote && (currentStep === 3 || currentStep === 4) && (
+        {quote && currentStep === 3 && (
           <div className="mt-8 p-6 bg-anthracite rounded-2xl text-white">
             <div className="flex justify-between items-center mb-4">
               <span className="text-white/70">Estimation totale</span>
@@ -481,15 +452,11 @@ export default function QuoteCalculator() {
                 {children > 0 ? `, ${children} enfant${children > 1 ? "s" : ""}` : ""}
               </p>
               <p>Jacuzzi privatif inclus gratuitement</p>
-              {currentStep === 4 && (
-                <>
-                  <div className="border-t border-white/20 my-3 pt-3">
-                    <p className="text-white/80">Arrhes (30%) : {quote.depositAmount}€</p>
-                    <p className="text-white/80">Solde : {quote.balanceAmount}€</p>
-                    <p className="text-white/80">Dépôt de garantie : {quote.securityDeposit}€</p>
-                  </div>
-                </>
-              )}
+              <div className="border-t border-white/20 my-3 pt-3">
+                <p className="text-white/80">Arrhes (30%) : {quote.depositAmount}€</p>
+                <p className="text-white/80">Solde : {quote.balanceAmount}€</p>
+                <p className="text-white/80">Dépôt de garantie : {quote.securityDeposit}€</p>
+              </div>
             </div>
           </div>
         )}
@@ -508,7 +475,7 @@ export default function QuoteCalculator() {
             <div />
           )}
 
-          {currentStep < 4 ? (
+          {currentStep < 3 ? (
             <button
               onClick={() => setCurrentStep((s) => s + 1)}
               disabled={!canProceed()}
