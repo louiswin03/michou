@@ -40,18 +40,16 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "bg-cream/95 backdrop-blur-md shadow-sm" : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-cream/95 backdrop-blur-md shadow-sm" : "bg-transparent"
+          }`}
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0 relative z-50">
-              <span className={`font-serif text-2xl font-bold transition-colors ${
-                isMobileMenuOpen ? "text-white" : isScrolled ? "text-slate" : "text-white"
-              }`}>
-                L'Écrin du Vignoble
+              <span className={`font-serif text-2xl font-bold transition-colors ${isMobileMenuOpen ? "text-white" : isScrolled ? "text-slate" : "text-white"
+                }`}>
+                L'Écrin du Vignobl
               </span>
             </Link>
 
@@ -61,13 +59,12 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${
-                    pathname === link.href
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${pathname === link.href
                       ? "text-gold"
                       : isScrolled
                         ? "text-slate"
                         : "text-white"
-                  }`}
+                    }`}
                 >
                   {link.label}
                 </Link>
@@ -96,11 +93,10 @@ export default function Navbar() {
 
       {/* Mobile Menu Full Screen Overlay */}
       <div
-        className={`fixed inset-0 z-[60] md:hidden transition-all duration-300 ${
-          isMobileMenuOpen
+        className={`fixed inset-0 z-[60] md:hidden transition-all duration-300 ${isMobileMenuOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full pointer-events-none"
-        }`}
+          }`}
       >
         {/* Backdrop */}
         <div
@@ -125,9 +121,8 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`font-serif text-3xl transition-all duration-300 ${
-                  pathname === link.href ? "text-gold" : "text-white hover:text-gold"
-                } ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+                className={`font-serif text-3xl transition-all duration-300 ${pathname === link.href ? "text-gold" : "text-white hover:text-gold"
+                  } ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
                 style={{
                   transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : "0ms",
                 }}
@@ -138,9 +133,8 @@ export default function Navbar() {
             <Link
               href="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`mt-8 px-8 py-4 bg-gold text-cream font-medium text-lg rounded-full hover:bg-gold/90 transition-all duration-300 ${
-                isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
+              className={`mt-8 px-8 py-4 bg-gold text-cream font-medium text-lg rounded-full hover:bg-gold/90 transition-all duration-300 ${isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}
               style={{
                 transitionDelay: isMobileMenuOpen ? `${navLinks.length * 50}ms` : "0ms",
               }}
@@ -151,7 +145,7 @@ export default function Navbar() {
 
           {/* Decorative Element */}
           <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-            <p className="text-white/50 text-sm tracking-widest uppercase">L'Écrin du Vignoble</p>
+            <p className="text-white/50 text-sm tracking-widest uppercase">L'Écrin du Vignobl</p>
           </div>
         </div>
       </div>

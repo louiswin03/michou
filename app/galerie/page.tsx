@@ -2,12 +2,12 @@ import type { Metadata } from "next"
 import GalleryGrid from "@/components/gallery-grid"
 
 export const metadata: Metadata = {
-  title: "Galerie Photos - L'Écrin du Vignoble | Gîte de Charme en Alsace",
+  title: "Galerie Photos - L'Écrin du Vignobl | Gîte de Charme en Alsace",
   description:
     "Explorez en images notre gîte de charme à Wettolsheim. Salon spacieux, chambres confortables, jacuzzi privatif, cuisine équipée et extérieurs verdoyants.",
   keywords: ["photos gîte alsace", "galerie photo location vacances", "images jacuzzi wettolsheim", "intérieur gîte charme"],
   openGraph: {
-    title: "Galerie Photos - L'Écrin du Vignoble",
+    title: "Galerie Photos - L'Écrin du Vignobl",
     description: "Découvrez l'atmosphère unique de notre gîte en images.",
     type: "website",
     images: [
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
         url: "/images/salon.webp",
         width: 1200,
         height: 630,
-        alt: "Salon du gîte L'Écrin du Vignoble",
+        alt: "Salon du gîte L'Écrin du Vignobl",
       },
     ],
   },

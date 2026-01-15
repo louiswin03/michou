@@ -36,7 +36,7 @@ export default function AmenitiesSection() {
           <span className="text-gold font-medium tracking-[0.2em] uppercase text-sm">Équipements & Services</span>
           <h2 className="mt-4 font-serif text-3xl md:text-4xl lg:text-5xl text-slate">Tout pour votre confort</h2>
           <p className="mt-6 text-taupe text-lg">
-            Des prestations haut de gamme pour un séjour sans compromis. 
+            Des prestations haut de gamme pour un séjour sans compromis.
           </p>
         </div>
 
@@ -63,10 +63,10 @@ export default function AmenitiesSection() {
               <h3 className="mt-4 font-serif text-3xl md:text-4xl text-white">Jacuzzi Privatif</h3>
               <p className="mt-6 text-white/80 text-lg leading-relaxed">
                 Profitez de moments de détente absolue dans notre jacuzzi extérieur 6 places, ouvert toute l'année.
-                Situé sur une terrasse supplémentaire dans le jardin, il offre une vue imprenable sur le vignoble.
+                Intégré dans une terrasse aménagée dans le parc.
               </p>
               <ul className="mt-8 space-y-3">
-                {["6 places", "Ouvert toute l'année", "Vue sur le vignoble", "Accès privatif"].map((item) => (
+                {["6 places", "Ouvert toute l'année", "Accès privatif"].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-white/90">
                     <div className="w-2 h-2 bg-gold rounded-full" />
                     {item}

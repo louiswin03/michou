@@ -20,7 +20,7 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Tourisme & Région - L'Écrin du Vignoble | Route des Vins, Colmar, Eguisheim",
+  title: "Tourisme & Région - L'Écrin du Vignobl | Route des Vins, Colmar, Eguisheim",
   description:
     "Découvrez l'Alsace depuis Wettolsheim : à 10 min d'Eguisheim (plus beau village de France), 5 km de Colmar, sur la Route des Vins. Châteaux, vignobles, gastronomie, randonnées.",
   keywords: [
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "châteaux Alsace",
   ],
   openGraph: {
-    title: "Tourisme & Région - L'Écrin du Vignoble | Découvrez l'Alsace",
+    title: "Tourisme & Région - L'Écrin du Vignobl | Découvrez l'Alsace",
     description:
       "Position idéale sur la Route des Vins : Eguisheim à 10 min, Colmar à 5 km. Vignobles, châteaux, gastronomie.",
     type: "website",
@@ -204,7 +204,7 @@ export default function TourismePage() {
                 Un Emplacement Privilégié
               </h2>
               <p className="mt-4 text-taupe text-lg max-w-3xl mx-auto">
-                Le gîte L'Écrin du Vignoble est situé à Wettolsheim, au cœur du vignoble alsacien, dans un cadre
+                Le gîte L'Écrin du Vignobl est situé à Wettolsheim, au cœur du vignoble alsacien, dans un cadre
                 enchanteur avec des vues sur le vignoble, le village et la Forêt Noire.
               </p>
             </div>

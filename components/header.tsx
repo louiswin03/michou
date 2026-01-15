@@ -29,18 +29,16 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? "bg-cream/95 backdrop-blur-md shadow-sm" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? "bg-cream/95 backdrop-blur-md shadow-sm" : "bg-transparent"
+        }`}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="#accueil" className="flex-shrink-0">
-            <span className={`font-serif text-2xl font-bold transition-colors ${
-              isScrolled ? "text-slate" : "text-white"
-            }`}>
-              L'Écrin du Vignoble
+            <span className={`font-serif text-2xl font-bold transition-colors ${isScrolled ? "text-slate" : "text-white"
+              }`}>
+              L'Écrin du Vignobl
             </span>
           </Link>
 
@@ -50,9 +48,8 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${
-                  isScrolled ? "text-slate" : "text-white"
-                }`}
+                className={`text-sm font-medium tracking-wide transition-colors hover:text-gold ${isScrolled ? "text-slate" : "text-white"
+                  }`}
               >
                 {link.label}
               </Link>

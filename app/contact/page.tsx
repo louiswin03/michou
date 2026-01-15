@@ -5,9 +5,9 @@ import QuoteCalculator from "@/components/quote-calculator"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Contact & Réservation - L'Écrin du Vignoble | Demandez votre Devis",
+  title: "Contact & Réservation - L'Écrin du Vignobl | Demandez votre Devis",
   description:
-    "Contactez-nous pour réserver votre séjour au gîte L'Écrin du Vignoble à Wettolsheim. Calculateur de devis en ligne, réponse rapide. Gîte 4 personnes avec jacuzzi en Alsace.",
+    "Contactez-nous pour réserver votre séjour au gîte L'Écrin du Vignobl à Wettolsheim. Calculateur de devis en ligne, réponse rapide. Gîte 4 personnes avec jacuzzi en Alsace.",
   keywords: [
     "réservation gîte Alsace",
     "devis location Wettolsheim",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "tarifs gîte Alsace",
   ],
   openGraph: {
-    title: "Contact & Réservation - L'Écrin du Vignoble",
+    title: "Contact & Réservation - L'Écrin du Vignobl",
     description: "Demandez votre devis personnalisé en ligne. Réponse rapide garantie.",
     type: "website",
   },
@@ -74,7 +74,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="font-serif text-xl text-slate mb-3">Adresse</h3>
                 <p className="text-taupe leading-relaxed">
-                  L'Écrin du Vignoble
+                  L'Écrin du Vignobl
                   <br />
                   68920 Wettolsheim
                   <br />
@@ -142,7 +142,7 @@ export default function ContactPage() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Carte de localisation de L'Écrin du Vignoble à Wettolsheim"
+                  title="Carte de localisation de L'Écrin du Vignobl à Wettolsheim"
                 />
               </div>
             </div>

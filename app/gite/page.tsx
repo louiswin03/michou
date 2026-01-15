@@ -24,7 +24,7 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Le Gîte - L'Écrin du Vignoble | Appartement 4 Personnes avec Jacuzzi en Alsace",
+  title: "Le Gîte - L'Écrin du Vignobl | Appartement 4 Personnes avec Jacuzzi en Alsace",
   description:
     "Découvrez notre gîte haut de gamme de 4 personnes à Wettolsheim : 2 chambres confortables, salon spacieux avec TV 50', cuisine équipée, jacuzzi extérieur 6 places, climatisation Daikin, WiFi fibre. Linge fourni, lits faits à l'arrivée.",
   keywords: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     "gîte jacuzzi Alsace",
   ],
   openGraph: {
-    title: "Le Gîte - L'Écrin du Vignoble | 4 Personnes avec Jacuzzi",
+    title: "Le Gîte - L'Écrin du Vignobl | 4 Personnes avec Jacuzzi",
     description:
       "Gîte haut de gamme 4 personnes : 2 chambres, salon spacieux, cuisine équipée, jacuzzi, climatisation, WiFi fibre.",
     type: "website",
@@ -92,9 +92,9 @@ const mainServices = [
   {
     icon: Sparkles,
     title: "Jacuzzi Extérieur",
-    subtitle: "6 personnes - Ouvert toute l'année",
+    subtitle: "6 places - Ouvert toute l'année",
     description:
-      "Profitez d'un jacuzzi privatif pour 6 personnes intégré dans une terrasse aménagée dans le parc. Ouvert toute l'année pour des moments de détente inoubliables.",
+      "Profitez d'un jacuzzi privatif 6 places intégré dans une terrasse aménagée dans le parc. Ouvert toute l'année pour des moments de détente inoubliables.",
     image: "/images/jaccuzi.jpeg",
     highlight: true,
   },
@@ -161,7 +161,7 @@ export default function GitePage() {
           <div className="absolute inset-0">
             <Image
               src="/images/salon_nuit.webp"
-              alt="Intérieur du gîte L'Écrin du Vignoble - Salon lumineux avec vue sur le vignoble alsacien"
+              alt="Intérieur du gîte L'Écrin du Vignobl - Salon lumineux avec vue sur le vignoble alsacien"
               fill
               className="object-cover opacity-40"
               priority
@@ -188,7 +188,7 @@ export default function GitePage() {
                 Un Écrin au Cœur du Vignoble
               </h2>
               <p className="text-taupe text-lg leading-relaxed mb-4">
-                L'Écrin du Vignoble est prévu pour <strong>4 personnes</strong> et idéal pour une famille. Situé à
+                L'Écrin du Vignobl est prévu pour <strong>4 personnes</strong> et idéal pour une famille. Situé à
                 Wettolsheim au cœur du vignoble et à <strong>10 minutes à pied d'Eguisheim</strong>, un des plus beaux
                 villages de France. Vous êtes à <strong>5 km du centre de Colmar</strong>.
               </p>

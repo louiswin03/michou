@@ -9,7 +9,7 @@ import Link from "next/link"
 import { Home, Sparkles, Map, Calendar } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "L'Écrin du Vignoble | Gîte de Charme avec Jacuzzi en Alsace - Wettolsheim",
+  title: "L'Écrin du Vignobl | Gîte de Charme avec Jacuzzi en Alsace - Wettolsheim",
   description:
     "Gîte haut de gamme 4 personnes avec jacuzzi privatif au cœur du vignoble alsacien. À 10 min d'Eguisheim, 5 km de Colmar. Prestations luxe, vue vignoble, parking privé.",
   keywords: [
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "location haut de gamme Alsace",
   ],
   openGraph: {
-    title: "L'Écrin du Vignoble | Gîte de Charme avec Jacuzzi en Alsace",
+    title: "L'Écrin du Vignobl | Gîte de Charme avec Jacuzzi en Alsace",
     description:
       "Gîte haut de gamme 4 personnes avec jacuzzi privatif. Vue imprenable sur le vignoble alsacien.",
     type: "website",

@@ -8,7 +8,7 @@ export default function HeroSection() {
       <div className="absolute inset-0">
         <Image
           src="/images/salon.webp"
-          alt="Salon chaleureux du gîte L'Écrin du Vignoble avec poutres apparentes et vue sur le vignoble"
+          alt="Salon chaleureux du gîte L'Écrin du Vignobl avec poutres apparentes et vue sur le vignoble"
           fill
           className="object-cover"
           priority

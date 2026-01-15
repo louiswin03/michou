@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Brand */}
             <div className="lg:col-span-2">
-              <h2 className="font-serif text-3xl text-white">L'Écrin du Vignoble</h2>
+              <h2 className="font-serif text-3xl text-white">L'Écrin du Vignobl</h2>
               <p className="mt-6 text-white/70 max-w-md leading-relaxed">
                 Gîte luxueux avec jacuzzi au cœur du vignoble alsacien.
                 À 10 minutes d'Eguisheim, l'un des
@@ -26,7 +26,7 @@ export default function Footer() {
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
                   <span className="text-white/70">
-                    L'Écrin du Vignoble
+                    L'Écrin du Vignobl
                     <br />
                     68920 Wettolsheim
                     <br />
@@ -78,7 +78,7 @@ export default function Footer() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/50 text-sm">
-              © {new Date().getFullYear()} L'Écrin du Vignoble. Tous droits réservés.
+              © {new Date().getFullYear()} L'Écrin du Vignobl. Tous droits réservés.
             </p>
             <div className="flex gap-6 text-sm">
               <Link href="/mentions-legales" className="text-white/50 hover:text-white transition-colors">

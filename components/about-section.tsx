@@ -7,7 +7,7 @@ import GalleryModal from "./gallery-modal"
 
 const highlights = [
   { icon: MapPin, label: "Emplacement idéal", desc: "À 5km de Colmar" },
-  { icon: Users, label: "4 à 6 personnes", desc: "Idéal en famille" },
+  { icon: Users, label: "4 personnes max", desc: "Idéal en famille" },
   { icon: Star, label: "Haut de gamme", desc: "Prestations luxe" },
   { icon: Sparkles, label: "Jacuzzi inclus", desc: "Ouvert toute l'année" },
 ]
@@ -84,7 +84,7 @@ export default function AboutSection() {
                 <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
                   <Image
                     src="/images/jaccuzi2.jpeg"
-                    alt="Extérieur moderne du gîte L'Écrin du Vignoble"
+                    alt="Extérieur moderne du gîte L'Écrin du Vignobl"
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-700"
                   />
