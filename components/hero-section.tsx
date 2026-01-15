@@ -12,6 +12,8 @@ export default function HeroSection() {
           fill
           className="object-cover"
           priority
+          quality={60}
+          sizes="100vw"
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIhAAAQMDBAMBAAAAAAAAAAAAAQIDBAAFEQYSITETQVFh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAZEQADAAMAAAAAAAAAAAAAAAAAAQIRITH/2gAMAwEAAhEDEEEP/oAfMf0K"
         />
@@ -27,7 +29,7 @@ export default function HeroSection() {
           Gîte luxueux avec jacuzzi au Cœur du Vignoble
         </h1>
         <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-white/90 max-w-2xl px-4">
-          À 10 minutes d'Eguisheim, l'un des plus beaux villages de France, découvrez un havre de paix avec jacuzzi inclus et
+          À 10 minutes à pied d'Eguisheim, l'un des plus beaux villages de France, découvrez un havre de paix avec jacuzzi inclus et
           prestations haut de gamme
         </p>
 

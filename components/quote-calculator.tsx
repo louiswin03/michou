@@ -1,14 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Calendar, Users, Check, ChevronRight, ChevronLeft, FileText, User, Loader2 } from "lucide-react"
-import { useGenerateContract, type ContractData } from "@/hooks/useGenerateContract"
+import { Calendar, Users, Check, ChevronRight, ChevronLeft, FileText, User, Loader2, Send } from "lucide-react"
 import { useSanityAvailability, useSanityQuote } from "@/hooks/useSanityCalendar"
+import { toast } from "sonner"
+import { type ContractData } from "@/lib/generateContractDoc"
 
 const steps = [
-  { id: 1, title: "Dates", icon: Calendar },
-  { id: 2, title: "Voyageurs", icon: Users },
-  { id: 3, title: "Vos infos", icon: User },
+  { id: 1, title: "Séjour", icon: Calendar },
+  { id: 2, title: "Vos infos", icon: User },
 ]
 
 // Fonction pour formater les dates sans décalage de fuseau horaire
@@ -27,6 +27,8 @@ export default function QuoteCalculator() {
   const [checkOut, setCheckOut] = useState("")
   const [adults, setAdults] = useState(2)
   const [children, setChildren] = useState(0)
+  const [isSending, setIsSending] = useState(false)
+  const [requestSent, setRequestSent] = useState(false)
 
   // Client information
   const [clientFirstName, setClientFirstName] = useState("")
@@ -34,8 +36,6 @@ export default function QuoteCalculator() {
   const [clientAddress, setClientAddress] = useState("")
   const [clientPhone, setClientPhone] = useState("")
   const [clientEmail, setClientEmail] = useState("")
-
-  const { generatePDF } = useGenerateContract()
 
   // Utiliser Sanity pour vérifier la disponibilité
   const { availability, loading: availabilityLoading } = useSanityAvailability(checkIn, checkOut)
@@ -62,7 +62,7 @@ export default function QuoteCalculator() {
     baseTotal: sanityQuote.pricing.total,
     basePrice: sanityQuote.pricing.accommodation,
     perNight: Math.round(sanityQuote.pricing.accommodation / sanityQuote.nights),
-    cleaningFee: 0,
+    cleaningFee: sanityQuote.pricing.cleaningFee || 60,
     touristTax: sanityQuote.pricing.touristTax,
     discount: 0,
     currency: 'EUR',
@@ -89,11 +89,10 @@ export default function QuoteCalculator() {
           quote &&
           quote.nights > 0 &&
           !quoteLoading &&
-          !availabilityLoading
+          !availabilityLoading &&
+          adults > 0 && adults + children <= 4
         )
       case 2:
-        return adults > 0 && adults + children <= 6
-      case 3:
         return (
           clientFirstName.trim() !== "" &&
           clientLastName.trim() !== "" &&
@@ -107,9 +106,10 @@ export default function QuoteCalculator() {
     }
   }
 
-  const handleGenerateContract = () => {
+  const handleSendRequest = async () => {
     if (!quote || !checkIn || !checkOut) return
 
+    setIsSending(true)
     const contractData: ContractData = {
       clientFirstName,
       clientLastName,
@@ -122,9 +122,60 @@ export default function QuoteCalculator() {
       depositAmount: quote.depositAmount,
       balanceAmount: quote.balanceAmount,
       contractDate: new Date().toLocaleDateString("fr-FR"),
+      nights: quote.nights,
+      cleaningFee: quote.cleaningFee,
+      touristTax: quote.touristTax,
+      adults: adults,
+      children: children,
     }
 
-    generatePDF(contractData)
+    try {
+      const response = await fetch('/api/send-contract', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contractData),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setRequestSent(true)
+      } else {
+        throw new Error(data.message || "Erreur lors de l'envoi")
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("Une erreur est survenue lors de l'envoi de la demande.")
+    } finally {
+      setIsSending(false)
+    }
+  }
+
+  if (requestSent) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-0">
+        <div className="bg-card rounded-3xl shadow-xl p-8 sm:p-12 text-center">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check className="w-10 h-10 text-green-600" />
+          </div>
+          <h3 className="font-serif text-3xl text-slate mb-4">Demande envoyée !</h3>
+          <p className="text-taupe text-lg mb-8">
+            Votre demande de réservation a bien été prise en compte. <br />
+            Vous recevrez une réponse ainsi que votre contrat de location dans les plus brefs délais.
+          </p>
+          <div className="p-6 bg-cream rounded-xl border border-border inline-block text-left w-full max-w-md">
+            <h4 className="font-serif text-xl text-slate mb-4">Récapitulatif</h4>
+            <div className="space-y-2 text-taupe">
+              <p><span className="font-medium text-slate">Dates :</span> Du {new Date(checkIn).toLocaleDateString("fr-FR")} au {new Date(checkOut).toLocaleDateString("fr-FR")}</p>
+              <p><span className="font-medium text-slate">Voyageurs :</span> {adults} adultes, {children} enfants</p>
+              <p><span className="font-medium text-slate">Total estimé :</span> {quote?.baseTotal}€</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -195,6 +246,60 @@ export default function QuoteCalculator() {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Guests Selection (Previously Step 2) */}
+            <div className="mt-8 border-t border-border pt-8">
+              <h3 className="font-serif text-xl text-slate mb-6">Voyageurs</h3>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-border">
+                  <div>
+                    <p className="font-medium text-slate">Adultes</p>
+                    <p className="text-xs text-taupe">13 ans +</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setAdults(Math.max(1, adults - 1))}
+                      className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center font-medium text-slate">{adults}</span>
+                    <button
+                      onClick={() => setAdults(Math.min(4 - children, adults + 1))}
+                      className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-border">
+                  <div>
+                    <p className="font-medium text-slate">Enfants</p>
+                    <p className="text-xs text-taupe">2-12 ans</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setChildren(Math.max(0, children - 1))}
+                      className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center font-medium text-slate">{children}</span>
+                    <button
+                      onClick={() => setChildren(Math.min(4 - adults, children + 1))}
+                      className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* Warning about Capacity */}
+              {adults + children > 4 && (
+                <p className="text-red-500 text-sm mt-2">Maximum 4 personnes autorisées.</p>
+              )}
+              <p className="text-xs text-taupe mt-2">Capacité stricte : 4 personnes.</p>
             </div>
 
             {/* Loading state */}
@@ -279,6 +384,12 @@ export default function QuoteCalculator() {
                           </div>
                         )}
 
+                        {/* Frais de ménage */}
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate">Frais de ménage</span>
+                          <span className="text-slate font-medium">{quote.cleaningFee}€</span>
+                        </div>
+
                         {/* Taxe de séjour */}
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-slate">
@@ -305,64 +416,12 @@ export default function QuoteCalculator() {
           </div>
         )}
 
-        {/* Step 2: Guests */}
+        {/* Step 2 (formerly 3): Client Information */}
         {currentStep === 2 && (
-          <div className="space-y-6 sm:space-y-8">
-            <h3 className="font-serif text-xl sm:text-2xl text-slate mb-6">Combien de voyageurs ?</h3>
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-cream rounded-xl">
-                <div>
-                  <p className="font-medium text-slate">Adultes</p>
-                  <p className="text-sm text-taupe">13 ans et plus</p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setAdults(Math.max(1, adults - 1))}
-                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center font-medium text-slate">{adults}</span>
-                  <button
-                    onClick={() => setAdults(Math.min(6 - children, adults + 1))}
-                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-cream rounded-xl">
-                <div>
-                  <p className="font-medium text-slate">Enfants</p>
-                  <p className="text-sm text-taupe">2 - 12 ans</p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setChildren(Math.max(0, children - 1))}
-                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center font-medium text-slate">{children}</span>
-                  <button
-                    onClick={() => setChildren(Math.min(6 - adults, children + 1))}
-                    className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-cream-dark transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-            <p className="text-sm text-taupe text-center">Capacité : 4 personnes (jusqu'à 6 possible)</p>
-          </div>
-        )}
-
-        {/* Step 3: Client Information */}
-        {currentStep === 3 && (
           <div className="space-y-6 sm:space-y-8">
             <h3 className="font-serif text-xl sm:text-2xl text-slate mb-6">Vos coordonnées</h3>
             <p className="text-taupe text-sm mb-6">
-              Remplissez vos informations pour générer automatiquement votre contrat de location.
+              Remplissez vos informations pour envoyer votre demande de réservation et recevoir le contrat.
             </p>
             <div className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
@@ -423,43 +482,48 @@ export default function QuoteCalculator() {
               </div>
             </div>
           </div>
-        )}
+        )
+        }
 
         {/* Quote Summary */}
-        {quote && currentStep === 3 && (
-          <div className="mt-8 p-6 bg-anthracite rounded-2xl text-white">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-white/70">Estimation totale</span>
-              <span className="font-serif text-3xl">{quote.baseTotal}€</span>
-            </div>
-            <div className="text-sm text-white/60 space-y-1">
-              {hasDifferentPrices && quote.nightsBreakdown ? (
-                <div className="space-y-1 mb-2">
-                  <p className="text-white/80 font-semibold mb-1">Détail par nuit :</p>
-                  {quote.nightsBreakdown.map((night: any, index: number) => (
-                    <p key={index} className="pl-2 text-xs">
-                      {formatDateSafe(night.date, { day: 'numeric', month: 'short' })} : {night.price}€
-                    </p>
-                  ))}
-                </div>
-              ) : (
+        {
+          quote && currentStep === 2 && (
+            <div className="mt-8 p-6 bg-anthracite rounded-2xl text-white">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-white/70">Estimation totale</span>
+                <span className="font-serif text-3xl">{quote.baseTotal}€</span>
+              </div>
+              <div className="text-sm text-white/60 space-y-1">
+                {hasDifferentPrices && quote.nightsBreakdown ? (
+                  <div className="space-y-1 mb-2">
+                    <p className="text-white/80 font-semibold mb-1">Détail par nuit :</p>
+                    {quote.nightsBreakdown.map((night: any, index: number) => (
+                      <p key={index} className="pl-2 text-xs">
+                        {formatDateSafe(night.date, { day: 'numeric', month: 'short' })} : {night.price}€
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p>
+                    {quote.nights} nuit{quote.nights > 1 ? "s" : ""} × ~{quote.perNight}€/nuit
+                  </p>
+                )}
                 <p>
-                  {quote.nights} nuit{quote.nights > 1 ? "s" : ""} × ~{quote.perNight}€/nuit
+                  {adults} adulte{adults > 1 ? "s" : ""}
+                  {children > 0 ? `, ${children} enfant${children > 1 ? "s" : ""}` : ""}
                 </p>
-              )}
-              <p>
-                {adults} adulte{adults > 1 ? "s" : ""}
-                {children > 0 ? `, ${children} enfant${children > 1 ? "s" : ""}` : ""}
-              </p>
-              <p>Jacuzzi privatif inclus gratuitement</p>
-              <div className="border-t border-white/20 my-3 pt-3">
-                <p className="text-white/80">Arrhes (30%) : {quote.depositAmount}€</p>
-                <p className="text-white/80">Solde : {quote.balanceAmount}€</p>
-                <p className="text-white/80">Dépôt de garantie : {quote.securityDeposit}€</p>
+                <p>Frais de ménage : {quote.cleaningFee}€</p>
+                <p>Taxe de séjour : {quote.touristTax.toFixed(2)}€</p>
+                <p>Jacuzzi privatif inclus gratuitement</p>
+                <div className="border-t border-white/20 my-3 pt-3">
+                  <p className="text-white/80">Arrhes (30%) : {quote.depositAmount}€</p>
+                  <p className="text-white/80">Solde : {quote.balanceAmount}€</p>
+                  <p className="text-white/80">Dépôt de garantie : {quote.securityDeposit}€</p>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {/* Navigation */}
         <div className="mt-8 flex justify-between">
@@ -475,7 +539,7 @@ export default function QuoteCalculator() {
             <div />
           )}
 
-          {currentStep < 3 ? (
+          {currentStep < 2 ? (
             <button
               onClick={() => setCurrentStep((s) => s + 1)}
               disabled={!canProceed()}
@@ -486,12 +550,21 @@ export default function QuoteCalculator() {
             </button>
           ) : (
             <button
-              onClick={handleGenerateContract}
-              disabled={!canProceed()}
+              onClick={handleSendRequest}
+              disabled={!canProceed() || isSending}
               className="flex items-center gap-2 px-8 py-3 bg-gold text-cream rounded-full hover:bg-gold-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Télécharger le contrat PDF
-              <FileText className="w-4 h-4" />
+              {isSending ? (
+                <>
+                  Envoi en cours...
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                </>
+              ) : (
+                <>
+                  Envoyer la demande
+                  <Send className="w-4 h-4" />
+                </>
+              )}
             </button>
           )}
         </div>

@@ -57,6 +57,7 @@ export interface BookingRules {
   touristTaxPerPersonPerNight: number
   checkInTime: string
   checkOutTime: string
+  cleaningFee: number
   notes?: string
 }
 

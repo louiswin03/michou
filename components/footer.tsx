@@ -13,7 +13,7 @@ export default function Footer() {
             <div className="lg:col-span-2">
               <h2 className="font-serif text-3xl text-white">L'Écrin du Vignoble</h2>
               <p className="mt-6 text-white/70 max-w-md leading-relaxed">
-                Gîte luxueux avec jacuzzi au cœur du vignoble alsacien.   
+                Gîte luxueux avec jacuzzi au cœur du vignoble alsacien.
                 À 10 minutes d'Eguisheim, l'un des
                 plus beaux villages de France.
               </p>
@@ -35,8 +35,8 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-gold flex-shrink-0" />
-                  <a href="tel:+33600000000" className="text-white/70 hover:text-gold transition-colors">
-                    +33 6 00 00 00 00
+                  <a href="tel:+33681842554" className="text-white/70 hover:text-gold transition-colors">
+                    +33 6 81 84 25 54
                   </a>
                 </li>
                 <li className="flex items-center gap-3">

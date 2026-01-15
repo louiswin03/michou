@@ -31,6 +31,7 @@ export default function CalendarTool() {
   const [loading, setLoading] = useState(false)
   const [multiSelectMode, setMultiSelectMode] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [feesOpen, setFeesOpen] = useState(false)
   const [rulesOpen, setRulesOpen] = useState(false)
 
   // Formulaire
@@ -38,11 +39,13 @@ export default function CalendarTool() {
   const [isAvailable, setIsAvailable] = useState(true)
   const [comment, setComment] = useState('')
   const [minimumNights, setMinimumNights] = useState<number | undefined>()
+  const [color, setColor] = useState<string>('none')
   const [rangeStart, setRangeStart] = useState<string | null>(null)
 
   // Paramètres globaux
   const [defaultPrice, setDefaultPrice] = useState<number>(150)
   const [defaultMinNights, setDefaultMinNights] = useState<number>(2)
+  const [cleaningFee, setCleaningFee] = useState<number>(60)
   const [bookingRulesId, setBookingRulesId] = useState<string | null>(null)
 
   // Règles de prix
@@ -86,6 +89,7 @@ export default function CalendarTool() {
       if (result.success && result.rules) {
         setDefaultPrice(result.rules.defaultPricePerNight || 150)
         setDefaultMinNights(result.rules.defaultMinimumNights || 2)
+        setCleaningFee(result.rules.cleaningFee || 60)
         setBookingRulesId(result.rules._id)
       }
     } catch (error) {
@@ -102,6 +106,7 @@ export default function CalendarTool() {
           _id: bookingRulesId,
           defaultPricePerNight: defaultPrice,
           defaultMinimumNights: defaultMinNights,
+          cleaningFee,
         }),
       })
       const result = await response.json()
@@ -306,11 +311,13 @@ export default function CalendarTool() {
         setPrice(dayData.price)
         setIsAvailable(dayData.isAvailable)
         setComment(dayData.comment || '')
+        setColor(dayData.color || 'none')
         setMinimumNights(dayData.minimumNights)
       } else {
         setPrice(undefined)
         setIsAvailable(true)
         setComment('')
+        setColor('none')
         setMinimumNights(undefined)
       }
 
@@ -329,6 +336,7 @@ export default function CalendarTool() {
     setPrice(undefined)
     setIsAvailable(true)
     setComment('')
+    setColor('none')
     setMinimumNights(undefined)
     setSelectedRule('')
 
@@ -349,7 +357,7 @@ export default function CalendarTool() {
           minimumNights: minimumNights !== undefined ? minimumNights : dayData?.minimumNights,
           isAvailable,
           comment,
-          highlightColor: 'none',
+          highlightColor: color,
         }
       })
 
@@ -457,6 +465,19 @@ export default function CalendarTool() {
     // Rouge clair uniquement si indisponible
     if (!dayData.isAvailable) return '#fee2e2'
 
+    // Couleurs personnalisées (jours fériés etc)
+    if (dayData.color && dayData.color !== 'none') {
+      const colors: Record<string, string> = {
+        green: '#dcfce7',
+        yellow: '#fef9c3',
+        orange: '#ffedd5',
+        red: '#fee2e2',
+        blue: '#dbeafe',
+        purple: '#f3e8ff',
+      }
+      return colors[dayData.color] || '#ffffff'
+    }
+
     return '#ffffff'
   }
 
@@ -523,6 +544,7 @@ export default function CalendarTool() {
               )}
             </Flex>
             <Flex gap={2}>
+              <Button text="🧹 Frais" onClick={() => setFeesOpen(true)} mode="ghost" tone="default" />
               <Button text="📋 Règles" onClick={() => setRulesOpen(true)} mode="ghost" tone="positive" />
               <Button text="⚙️ Config" onClick={() => setSettingsOpen(true)} mode="ghost" tone="primary" />
             </Flex>
@@ -540,13 +562,13 @@ export default function CalendarTool() {
         <Card padding={4} radius={3} shadow={2}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px' }}>
             {/* Jours de la semaine */}
-            {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, idx) => (
+            {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day) => (
               <Box key={day} padding={2} style={{
-                backgroundColor: idx >= 5 ? '#f1f5f9' : 'transparent',
+                backgroundColor: '#f1f5f9',
                 borderRadius: '6px'
               }}>
                 <Text size={1} weight="bold" align="center" style={{
-                  color: idx >= 5 ? '#64748b' : '#1e293b'
+                  color: '#1e293b'
                 }}>{day}</Text>
               </Box>
             ))}
@@ -627,10 +649,10 @@ export default function CalendarTool() {
                         <span style={{ fontSize: '16px' }}>{getDayEmoji(dateStr)}</span>
                       )}
                     </Flex>
-                    {isCurrentMonth && (
+                    {isCurrentMonth && dayData?.isAvailable !== false && (
                       <Stack space={2}>
                         <Text size={1} weight="bold" style={{
-                          color: dayData?.isAvailable === false ? '#dc2626' : '#059669',
+                          color: '#059669',
                           fontSize: '14px',
                           marginTop: '4px'
                         }}>
@@ -638,17 +660,13 @@ export default function CalendarTool() {
                         </Text>
                         <Text size={0} style={{
                           fontSize: '11px',
-                          color: '#1e293b',
-                          fontWeight: '600',
-                          lineHeight: '1.4',
-                          marginTop: '2px'
+                          color: '#64748b'
                         }}>
-                          {dayData?.minimumNights || defaultMinNights} nuit{(dayData?.minimumNights || defaultMinNights) > 1 ? 's' : ''} min
+                          {dayData?.minimumNights || defaultMinNights} nuits min
                         </Text>
                         {dayData?.comment && (
                           <Text size={0} style={{
-                            fontSize: '10px',
-                            lineHeight: '1.4',
+                            fontSize: '11px',
                             color: '#334155',
                             fontWeight: '500',
                             fontStyle: 'italic',
@@ -818,6 +836,18 @@ export default function CalendarTool() {
                     </Card>
 
                     <Stack space={3}>
+                      <Label>Couleur (Jours Fériés / Vacances)</Label>
+                      <Select
+                        value={color}
+                        onChange={(e) => setColor(e.currentTarget.value)}
+                      >
+                        <option value="none">Aucune</option>
+                        <option value="orange">Orange (Jours Fériés)</option>
+                        <option value="blue">Bleu (Vacances)</option>
+                      </Select>
+                    </Stack>
+
+                    <Stack space={3}>
                       <Label>💬 Commentaire interne</Label>
                       <TextInput
                         value={comment}
@@ -845,6 +875,46 @@ export default function CalendarTool() {
                       onClick={handleSave}
                     />
                   </Flex>
+                </Flex>
+              </Stack>
+            </Box>
+          </Dialog>
+        )}
+
+        {/* Dialog Frais de Ménage */}
+        {feesOpen && (
+          <Dialog
+            id="fees-dialog"
+            header="🧹 Frais de Ménage"
+            onClose={() => setFeesOpen(false)}
+            width={1}
+          >
+            <Box padding={4}>
+              <Stack space={4}>
+                <Text size={1} muted>
+                  Modifiez ici les frais de ménage appliqués à chaque séjour.
+                </Text>
+
+                <Stack space={3}>
+                  <Label>Montant des frais (€)</Label>
+                  <TextInput
+                    type="number"
+                    value={cleaningFee}
+                    onChange={(e) => setCleaningFee(Number(e.currentTarget.value))}
+                    placeholder="60"
+                  />
+                </Stack>
+
+                <Flex gap={2} justify="flex-end">
+                  <Button text="Annuler" mode="ghost" onClick={() => setFeesOpen(false)} />
+                  <Button
+                    text="💾 Enregistrer"
+                    tone="primary"
+                    onClick={() => {
+                      saveSettings()
+                      setFeesOpen(false)
+                    }}
+                  />
                 </Flex>
               </Stack>
             </Box>

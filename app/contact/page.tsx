@@ -87,8 +87,8 @@ export default function ContactPage() {
                   <Phone className="w-8 h-8 text-gold" />
                 </div>
                 <h3 className="font-serif text-xl text-slate mb-3">Téléphone</h3>
-                <a href="tel:+33600000000" className="text-taupe hover:text-gold transition-colors">
-                  +33 6 00 00 00 00
+                <a href="tel:+33681842554" className="text-taupe hover:text-gold transition-colors">
+                  +33 6 81 84 25 54
                 </a>
               </div>
 
@@ -111,9 +111,11 @@ export default function ContactPage() {
                 </div>
                 <h3 className="font-serif text-xl text-slate mb-3">Horaires</h3>
                 <p className="text-taupe leading-relaxed">
-                  Lun - Dim
+                  Arrivée : 16h00
                   <br />
-                  9h00 - 20h00
+                  Départ : 10h00
+                  <br />
+                  <span className="text-xs text-slate">(Modulable selon disponibilité)</span>
                 </p>
               </div>
             </div>
@@ -205,7 +207,7 @@ export default function ContactPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="tel:+33600000000"
+                href="tel:+33681842554"
                 className="px-8 py-4 border-2 border-white text-white font-medium tracking-wide rounded-full hover:bg-white hover:text-slate transition-all"
               >
                 Nous Appeler

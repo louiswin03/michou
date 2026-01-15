@@ -168,8 +168,11 @@ export async function POST(request: Request) {
     const touristTaxRate = bookingRules?.touristTaxPerPersonPerNight || 1.5
     const touristTax = nights * totalGuests * touristTaxRate
 
+    // Frais de ménage
+    const cleaningFee = bookingRules?.cleaningFee || 60
+
     // Calculer le total
-    const total = totalAccommodation + touristTax
+    const total = totalAccommodation + touristTax + cleaningFee
 
     // Calculer les arrhes
     const depositPercentage = bookingRules?.depositPercentage || 30
@@ -192,6 +195,7 @@ export async function POST(request: Request) {
         },
         pricing: {
           accommodation: totalAccommodation,
+          cleaningFee,
           touristTax,
           total,
           deposit,

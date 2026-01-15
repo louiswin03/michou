@@ -82,10 +82,10 @@ const rooms = [
 ]
 
 const features = [
-  { icon: Bed, label: "2 chambres + canapé-lit", desc: "Jusqu'à 6 couchages" },
-  { icon: Users, label: "4 personnes", desc: "Capacité idéale" },
+  { icon: Bed, label: "2 chambres + canapé-lit", desc: "4 personnes max" },
+  { icon: Users, label: "4 personnes", desc: "" },
   { icon: Maximize2, label: "Grand espace", desc: "Confort optimal" },
-  { icon: Sparkles, label: "Jacuzzi privatif", desc: "6 places - Vue vignoble" },
+  { icon: Sparkles, label: "Jacuzzi privatif", desc: "6 places" },
 ]
 
 const mainServices = [
@@ -94,7 +94,7 @@ const mainServices = [
     title: "Jacuzzi Extérieur",
     subtitle: "6 personnes - Ouvert toute l'année",
     description:
-      "Profitez d'un jacuzzi privatif pour 6 personnes donnant sur une terrasse supplémentaire dans le jardin. Ouvert toute l'année pour des moments de détente inoubliables avec vue sur le vignoble.",
+      "Profitez d'un jacuzzi privatif pour 6 personnes intégré dans une terrasse aménagée dans le parc. Ouvert toute l'année pour des moments de détente inoubliables.",
     image: "/images/jaccuzi.jpeg",
     highlight: true,
   },
@@ -165,6 +165,8 @@ export default function GitePage() {
               fill
               className="object-cover opacity-40"
               priority
+              quality={60}
+              sizes="100vw"
             />
           </div>
           <div className="relative h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
@@ -226,18 +228,17 @@ export default function GitePage() {
               {rooms.map((room, index) => (
                 <article
                   key={room.title}
-                  className={`group bg-cream rounded-3xl overflow-hidden ${
-                    room.title === "Salle de bain" ? "md:col-span-2 md:max-w-2xl md:mx-auto" : ""
-                  }`}
+                  className={`group bg-cream rounded-3xl overflow-hidden ${room.title === "Salle de bain" ? "md:col-span-2 md:max-w-2xl md:mx-auto" : ""
+                    }`}
                 >
                   <div className={`relative ${room.title === "Salle de bain" ? "aspect-[4/5]" : "aspect-[4/3]"}`}>
                     <Image
                       src={room.image}
                       alt={room.alt}
                       fill
-                      className={`${
-                        room.title === "Salle de bain" ? "object-cover object-center" : "object-cover"
-                      } group-hover:scale-105 transition-transform duration-700`}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className={`${room.title === "Salle de bain" ? "object-cover object-center" : "object-cover"
+                        } group-hover:scale-105 transition-transform duration-700`}
                     />
                   </div>
                   <div className="p-6 sm:p-8">
@@ -267,9 +268,8 @@ export default function GitePage() {
               {mainServices.map((service, index) => (
                 <article
                   key={service.title}
-                  className={`grid lg:grid-cols-2 gap-6 sm:gap-8 items-center ${
-                    index % 2 === 1 ? "lg:grid-flow-dense" : ""
-                  }`}
+                  className={`grid lg:grid-cols-2 gap-6 sm:gap-8 items-center ${index % 2 === 1 ? "lg:grid-flow-dense" : ""
+                    }`}
                 >
                   <div
                     className={`relative aspect-[4/3] rounded-3xl overflow-hidden ${index % 2 === 1 ? "lg:col-start-2" : ""}`}
@@ -278,15 +278,15 @@ export default function GitePage() {
                       src={service.image}
                       alt={`${service.title} - ${service.subtitle}`}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
                       className="object-cover hover:scale-105 transition-transform duration-700"
                     />
                   </div>
 
                   <div className={index % 2 === 1 ? "lg:col-start-1 lg:row-start-1" : ""}>
                     <div
-                      className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-4 sm:mb-6 ${
-                        service.highlight ? "bg-gold" : "bg-gold/10"
-                      }`}
+                      className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-4 sm:mb-6 ${service.highlight ? "bg-gold" : "bg-gold/10"
+                        }`}
                     >
                       <service.icon className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 ${service.highlight ? "text-cream" : "text-gold"}`} />
                     </div>

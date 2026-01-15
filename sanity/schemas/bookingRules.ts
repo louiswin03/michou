@@ -62,6 +62,14 @@ export default defineType({
       description: 'Montant de la taxe de séjour par personne et par nuit',
     },
     {
+      name: 'cleaningFee',
+      title: 'Frais de ménage (€)',
+      type: 'number',
+      validation: Rule => Rule.required().min(0).max(200),
+      initialValue: 60,
+      description: 'Frais de ménage fixes par séjour',
+    },
+    {
       name: 'checkInTime',
       title: 'Heure d\'arrivée',
       type: 'string',

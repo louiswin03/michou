@@ -59,6 +59,7 @@ interface QuoteResponse {
   }
   pricing: {
     accommodation: number
+    cleaningFee: number
     touristTax: number
     total: number
     deposit: number

@@ -46,11 +46,8 @@ export default defineType({
       description: 'Couleur pour identifier rapidement la règle',
       options: {
         list: [
-          { title: 'Vert', value: 'green' },
-          { title: 'Bleu', value: 'blue' },
-          { title: 'Orange', value: 'orange' },
-          { title: 'Rouge', value: 'red' },
-          { title: 'Violet', value: 'purple' },
+          { title: 'Orange (Jours Fériés)', value: 'orange' },
+          { title: 'Bleu (Vacances)', value: 'blue' },
         ],
       },
       initialValue: 'blue',

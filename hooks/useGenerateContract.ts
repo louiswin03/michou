@@ -1,4 +1,5 @@
-import { jsPDF } from 'jspdf';
+import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, Table, TableRow, TableCell, WidthType, BorderStyle, UnderlineType, Convert } from "docx";
+import { saveAs } from "file-saver";
 
 export interface ContractData {
   clientLastName: string;
@@ -12,358 +13,310 @@ export interface ContractData {
   depositAmount: number;
   balanceAmount: number;
   contractDate: string;
+  nights: number;
+  cleaningFee: number;
+  touristTax: number;
 }
 
 export function useGenerateContract() {
-  const generatePDF = (data: ContractData) => {
-    const doc = new jsPDF();
+  const generatePDF = async (data: ContractData) => {
+    // Styles de base
+    const font = "Calibri";
+    const baseSize = 22; // 11pt
+    const titleSize = 28; // 14pt
 
-    let yPos = 25;
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 25;
-    const maxWidth = pageWidth - 2 * margin;
-
-    // Couleurs
-    const goldColor: [number, number, number] = [184, 134, 11];
-    const darkGray: [number, number, number] = [50, 50, 50];
-    const mediumGray: [number, number, number] = [100, 100, 100];
-    const lightGray: [number, number, number] = [140, 140, 140];
-
-    // Helper functions
-    const checkPageBreak = (spaceNeeded: number = 30) => {
-      if (yPos + spaceNeeded > pageHeight - 25) {
-        doc.addPage();
-        yPos = 25;
-        return true;
-      }
-      return false;
-    };
-
-    const addSpace = (space: number = 6) => {
-      yPos += space;
-    };
-
-    const addTitle = (text: string, size: number = 16) => {
-      checkPageBreak(15);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(size);
-      doc.setTextColor(...goldColor);
-      doc.text(text, pageWidth / 2, yPos, { align: 'center' });
-      yPos += size / 2 + 5;
-    };
-
-    const addSubtitle = (text: string, size: number = 11) => {
-      checkPageBreak(12);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(size);
-      doc.setTextColor(...darkGray);
-      doc.text(text, margin, yPos);
-      yPos += size / 2 + 5;
-    };
-
-    const addParagraph = (text: string, size: number = 9.5) => {
-      checkPageBreak(20);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(size);
-      doc.setTextColor(...mediumGray);
-      const lines = doc.splitTextToSize(text, maxWidth);
-
-      lines.forEach((line: string) => {
-        checkPageBreak(6);
-        doc.text(line, margin, yPos);
-        yPos += 4.5;
+    // Helper pour créer une ligne d'info (Label : Valeur)
+    const createInfoLine = (label: string, value: string) => {
+      return new Paragraph({
+        children: [
+          new TextRun({ text: label, bold: true, font, size: baseSize, color: "000000" }),
+          new TextRun({ text: " " + value, font, size: baseSize, color: "000000" }),
+        ],
+        spacing: { after: 120 },
       });
-      yPos += 1;
     };
 
-    const addInfoRow = (label: string, value: string) => {
-      checkPageBreak(8);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9.5);
-      doc.setTextColor(...mediumGray);
-      doc.text(label, margin, yPos);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(...darkGray);
-      const valueLines = doc.splitTextToSize(value, maxWidth - 55);
-      valueLines.forEach((line: string, index: number) => {
-        doc.text(line, margin + 55, yPos + (index * 5));
+    // Helper pour les titres de section
+    const createSectionTitle = (title: string) => {
+      return new Paragraph({
+        children: [
+          new TextRun({
+            text: title,
+            bold: true,
+            font,
+            size: 24, // 12pt
+            color: "000000",
+            underline: {
+              type: UnderlineType.SINGLE,
+              color: "000000",
+            }
+          })
+        ],
+        spacing: { before: 360, after: 240 },
+        alignment: AlignmentType.LEFT,
       });
-      yPos += Math.max(5, valueLines.length * 5 + 1);
     };
 
-    const addSeparator = () => {
-      checkPageBreak(5);
-      doc.setDrawColor(...goldColor);
-      doc.setLineWidth(0.3);
-      doc.line(margin, yPos, pageWidth - margin, yPos);
-      yPos += 10;
-    };
-
-    const addBulletPoint = (text: string, size: number = 9.5) => {
-      checkPageBreak(15);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(size);
-      doc.setTextColor(...mediumGray);
-
-      const bulletX = margin + 2;
-      doc.text('•', bulletX, yPos);
-
-      const textLines = doc.splitTextToSize(text, maxWidth - 8);
-      textLines.forEach((line: string) => {
-        checkPageBreak(6);
-        doc.text(line, margin + 8, yPos);
-        yPos += 4.5;
+    // Helper pour paragraphes simples
+    const createParagraph = (text: string, bold = false) => {
+      return new Paragraph({
+        children: [new TextRun({ text: text, bold: bold, font, size: baseSize, color: "000000" })],
+        spacing: { after: 120 },
+        alignment: AlignmentType.JUSTIFIED,
       });
-      yPos += 2;
     };
 
-    // ========== PAGE 1: CONTRAT PRINCIPAL ==========
+    // Helper pour les listes à puces
+    const createBulletPoint = (text: string) => {
+      return new Paragraph({
+        children: [new TextRun({ text: text, font, size: baseSize, color: "000000" })],
+        bullet: {
+          level: 0,
+        },
+        spacing: { after: 120 },
+        alignment: AlignmentType.JUSTIFIED,
+      });
+    };
 
-    // En-tête
-    addTitle('CONTRAT DE LOCATION SAISONNIÈRE', 17);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.setTextColor(...lightGray);
-    doc.text('Gîte de charme en Alsace - 9 Résidence du Château Martinsbourg', pageWidth / 2, yPos, { align: 'center' });
-    yPos += 10;
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            // TITRE PRINCIPAL
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "CONTRAT DE LOCATION SAISONNIÈRE",
+                  bold: true,
+                  font,
+                  size: 32, // 16pt
+                  color: "000000"
+                })
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 120 },
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Gîte de charme en Alsace - 9 Résidence du Château Martinsbourg",
+                  font,
+                  size: 24,
+                  italics: true,
+                  color: "444444"
+                })
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 480 },
+            }),
 
-    addSeparator();
+            // LE PROPRIÉTAIRE
+            createSectionTitle("LE PROPRIÉTAIRE"),
+            createInfoLine("Nom et Prénom :", "LEXCELLENT Michel"),
+            createInfoLine("Adresse :", "9 Résidence du Château Martinsbourg, 68920 WETTOLSHEIM"),
+            createInfoLine("Téléphone :", "+33 6 81 84 25 54"),
 
-    // Partie 1: Le propriétaire
-    addSubtitle('LE PROPRIÉTAIRE');
-    addInfoRow('Nom et Prénom :', 'LEXCELLENT Michel');
-    addInfoRow('Adresse :', '9 Résidence du Château Martinsbourg, 68920 WETTOLSHEIM');
-    addInfoRow('Téléphone :', '+33 6 81 84 25 54');
-    addSpace(8);
+            // LE LOCATAIRE
+            createSectionTitle("LE LOCATAIRE"),
+            createInfoLine("Nom et Prénom :", `${data.clientLastName.toUpperCase()} ${data.clientFirstName}`),
+            createInfoLine("Adresse :", data.clientAddress),
+            createInfoLine("Téléphone :", data.clientPhone),
+            createInfoLine("Email :", data.clientEmail),
 
-    // Partie 2: Le locataire
-    addSubtitle('LE LOCATAIRE');
-    addInfoRow('Nom et Prénom :', `${data.clientLastName.toUpperCase()} ${data.clientFirstName}`);
-    addInfoRow('Adresse :', data.clientAddress);
-    addInfoRow('Téléphone :', data.clientPhone);
-    addInfoRow('Email :', data.clientEmail);
-    addSpace(8);
+            // DÉTAILS DE LA LOCATION
+            createSectionTitle("DÉTAILS DE LA LOCATION"),
+            createInfoLine("Période :", `Du ${data.checkInDate} au ${data.checkOutDate}`),
+            createInfoLine("Adresse du gîte :", "9 Résidence du Château Martinsbourg, 68920 WETTOLSHEIM"),
+            createInfoLine("Type :", "Appartement de 68 m²"),
 
-    addSeparator();
+            // CONDITIONS FINANCIÈRES
+            createSectionTitle("CONDITIONS FINANCIÈRES"),
+            // Tableau pour encadrer proprement les finances
+            new Table({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: {
+                top: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+                bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+                left: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+                right: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [
+                        new Paragraph({
+                          children: [
+                            new TextRun({ text: "Prix total du séjour : ", font, size: baseSize, bold: true }),
+                            new TextRun({ text: `${data.totalPrice} €`, font, size: 28, bold: true, color: "000000" }),
+                          ],
+                          spacing: { before: 120, after: 120 }
+                        }),
+                        new Paragraph({
+                          children: [
+                            new TextRun({ text: `Détail : ${data.nights} nuits • Ménage ${data.cleaningFee}€ • Taxe de séjour ${data.touristTax.toFixed(2)}€`, font, size: 20, color: "666666" })
+                          ],
+                          spacing: { after: 120 }
+                        }),
+                        new Paragraph({
+                          children: [new TextRun({ text: "Toutes charges et taxes comprises", font, size: baseSize, italics: true })],
+                          spacing: { after: 240 },
+                        }),
+                        new Paragraph({
+                          children: [new TextRun({ text: `Arrhes versées (30%) : ${data.depositAmount} € (chèque non encaissé)`, font, size: baseSize })]
+                        }),
+                        new Paragraph({
+                          children: [new TextRun({ text: `Solde restant : ${data.balanceAmount} €`, font, size: baseSize })]
+                        }),
+                        new Paragraph({
+                          children: [new TextRun({ text: `Dépôt de garantie : 400 € (chèque non encaissé)`, font, size: baseSize })],
+                          spacing: { after: 120 }
+                        }),
+                      ],
+                      margins: { top: 200, bottom: 200, left: 200, right: 200 },
+                    }),
+                  ],
+                }),
+              ],
+            }),
 
-    // Partie 3: Détails de la location
-    addSubtitle('DÉTAILS DE LA LOCATION');
-    addInfoRow('Période :', `Du ${data.checkInDate} au ${data.checkOutDate}`);
-    addInfoRow('Adresse du gîte :', '9 Résidence du Château Martinsbourg, 68920 WETTOLSHEIM');
-    addInfoRow('Type :', 'Appartement de 68 m²');
-    addSpace(8);
+            new Paragraph({
+              children: [
+                new TextRun({ text: `Le solde et le dépôt de garantie seront versés le jour de la remise des clés.`, font, size: baseSize, bold: true })
+              ],
+              spacing: { before: 360, after: 240 }
+            }),
+            new Paragraph({
+              text: `Fait à Wettolsheim, le ${data.contractDate}`,
+              alignment: AlignmentType.RIGHT,
+              spacing: { before: 120, after: 480 },
+              run: { font, size: baseSize }
+            }),
 
-    // Partie 4: Conditions financières
-    addSubtitle('CONDITIONS FINANCIÈRES');
 
-    // Encadré prix
-    checkPageBreak(45);
-    doc.setFillColor(250, 248, 243);
-    doc.roundedRect(margin, yPos, maxWidth, 38, 3, 3, 'F');
-    yPos += 9;
+            // CONDITIONS GÉNÉRALES DE LOCATION
+            new Paragraph({
+              children: [new TextRun({ text: "CONDITIONS GÉNÉRALES DE LOCATION", font, size: 28, bold: true })],
+              heading: HeadingLevel.HEADING_1,
+              pageBreakBefore: true,
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 480 },
+            }),
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Prix total du séjour :', margin + 6, yPos);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(...goldColor);
-    doc.text(`${data.totalPrice} €`, pageWidth - margin - 6, yPos, { align: 'right' });
-    yPos += 8;
+            createParagraph("La présente location est faite aux conditions ordinaires et de droit en pareille matière et notamment à celles ci-après que le locataire s'oblige à exécuter, sous peine de tous dommages et intérêts et même de résiliations des présentes, si bon semble au propriétaire et sans pouvoir réclamer la diminution du loyer."),
+            createParagraph("Les heures d'arrivée sont normalement prévues à partir de 16 h (prévenir par téléphone ou sms 1 heure avant l'arrivée), possibilité d'une arrivée anticipée en fonction de l'occupation du gîte. Les heures de départ sont normalement prévues le matin avant 10 heures (si locataires arrivant le même jour, sinon dans l'après-midi)."),
 
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.setTextColor(...mediumGray);
-    doc.text('Toutes charges et taxes comprises', margin + 6, yPos);
-    yPos += 7;
+            createSectionTitle("EN CAS DE DÉSISTEMENT"),
+            createParagraph("Du locataire : à plus de 15 jours avant la prise d'effet de la location, le locataire perd les arrhes versées."),
+            createParagraph("Du propriétaire : à moins d'un mois avant la prise d'effet de la location, il est tenu de verser le double des arrhes au locataire dans les sept jours suivant le désistement."),
 
-    doc.text(`Arrhes versées (30%) : ${data.depositAmount} € (chèque non encaissé)`, margin + 6, yPos);
-    yPos += 5;
-    doc.text(`Solde restant : ${data.balanceAmount} €`, margin + 6, yPos);
-    yPos += 5;
-    doc.text('Dépôt de garantie : 400 € (chèque non encaissé)', margin + 6, yPos);
-    yPos += 13;
+            createSectionTitle("RETARD D'ARRIVÉE"),
+            createParagraph("Si un retard de plus de quatre jours par rapport à la date d'arrivée prévue n'a pas été signalé par le locataire, le propriétaire pourra de bon droit essayer de relouer le logement tout en conservant la faculté de se retourner contre le locataire."),
 
-    addParagraph('Le solde et le dépôt de garantie seront versés le jour de la remise des clés.');
-    addSpace(10);
+            createSectionTitle("OBLIGATIONS DU LOCATAIRE"),
+            createBulletPoint("Occuper les lieux personnellement, les habiter en bon père de famille et les entretenir."),
+            createBulletPoint("Toutes les installations sont en état de marche. Toute réclamation survenant plus de 24h après l'entrée en jouissance des lieux ne pourra être admise."),
+            createBulletPoint("Les réparations rendues nécessaires par la négligence ou le mauvais entretien en cours de location seront à la charge du locataire."),
+            createBulletPoint("Veiller à ce que la tranquillité du voisinage ne soit pas troublée."),
 
-    addSeparator();
+            createSectionTitle("ÉQUIPEMENTS ET MOBILIER"),
+            createParagraph("Les locaux sont loués meublés avec matériel de cuisine, vaisselle, verrerie, couvertures et oreillers, tels qu'ils sont dans l'état descriptif. S'il y a lieu, le propriétaire ou son représentant seront en droit de réclamer au locataire, à son départ, la valeur totale au prix de remplacement des objets, mobiliers ou matériels cassés, fêlés, ébréchés ou détériorés."),
 
-    // Date
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(9);
-    doc.setTextColor(...lightGray);
-    doc.text(`Fait à Wettolsheim, le ${data.contractDate}`, margin, yPos);
-    yPos += 10;
+            createSectionTitle("ASSURANCE"),
+            createParagraph("Le locataire s'engage à s'assurer contre les risques locatifs (incendie, dégât des eaux). Le défaut d'assurance, en cas de sinistre, donnera lieu à des dommages et intérêts. Le propriétaire s'engage à assurer le logement contre les risques locatifs pour le compte du locataire, ce dernier ayant l'obligation de lui signaler, dans les 24h, tout sinistre survenu dans le logement."),
 
-    // ========== PAGE 2: CONDITIONS GÉNÉRALES ==========
-    doc.addPage();
-    yPos = 25;
+            createSectionTitle("DÉPÔT DE GARANTIE"),
+            createParagraph("Le dépôt de garantie sera restitué au départ du locataire sauf en cas de retenue justifiée."),
 
-    addTitle('CONDITIONS GÉNÉRALES DE LOCATION', 15);
-    addSpace(5);
+            // ÉTAT DESCRIPTIF
+            new Paragraph({
+              children: [new TextRun({ text: "ÉTAT DESCRIPTIF DE LA LOCATION", font, size: 28, bold: true })],
+              heading: HeadingLevel.HEADING_1,
+              pageBreakBefore: true,
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 480 },
+            }),
 
-    addParagraph('La présente location est faite aux conditions ordinaires et de droit en pareille matière et notamment à celles ci-après que le locataire s\'oblige à exécuter, sous peine de tous dommages et intérêts et même de résiliations des présentes, si bon semble au propriétaire et sans pouvoir réclamer la diminution du loyer.');
-    addSpace(5);
+            createSectionTitle("INFORMATIONS GÉNÉRALES"),
+            createInfoLine("Adresse :", "9 Résidence du Château Martinsbourg, 68920 WETTOLSHEIM"),
+            createInfoLine("Type :", "Appartement"),
+            createInfoLine("Surface habitable :", "68 m²"),
 
-    addParagraph('Les heures d\'arrivée sont normalement prévues à partir de 16 h (prévenir par téléphone ou sms 1 heure avant l\'arrivée), possibilité d\'une arrivée anticipée en fonction de l\'occupation du gîte. Les heures de départ sont normalement prévues le matin avant 10 heures (si locataires arrivant le même jour, sinon dans l\'après-midi).');
-    addSpace(8);
+            createSectionTitle("DÉTAILS DES PIÈCES"),
 
-    addSubtitle('EN CAS DE DÉSISTEMENT');
-    addParagraph('Du locataire : à plus de 15 jours avant la prise d\'effet de la location, le locataire perd les arrhes versées.');
-    addSpace(3);
-    addParagraph('Du propriétaire : à moins d\'un mois avant la prise d\'effet de la location, il est tenu de verser le double des arrhes au locataire dans les sept jours suivant le désistement.');
-    addSpace(8);
+            new Paragraph({ text: "Cuisine", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Table en verre avec 4 chaises, lave-vaisselle, lave-linge, sèche-linge, plaque à induction, réfrigérateur avec congélateur, micro-ondes avec four, évier avec mitigeur, cafetière, vaisselle neuve, climatisation et chauffage DAIKIN avec télécommande, meubles de rangement."),
 
-    addSubtitle('RETARD D\'ARRIVÉE');
-    addParagraph('Si un retard de plus de quatre jours par rapport à la date d\'arrivée prévue n\'a pas été signalé par le locataire, le propriétaire pourra de bon droit essayer de relouer le logement tout en conservant la faculté de se retourner contre le locataire.');
-    addSpace(8);
+            new Paragraph({ text: "Salon", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Canapé 3 places avec couchage de 1,60 mètres pour 2 personnes, chaîne hifi, téléviseur écran plat avec fibre, meuble TV, 3 tables de salon, grand placard avec coffre sécurisé, climatisation et chauffage DAIKIN avec télécommande."),
 
-    addSubtitle('OBLIGATIONS DU LOCATAIRE');
-    addBulletPoint('Occuper les lieux personnellement, les habiter en bon père de famille et les entretenir.');
-    addBulletPoint('Toutes les installations sont en état de marche. Toute réclamation survenant plus de 24h après l\'entrée en jouissance des lieux ne pourra être admise.');
-    addBulletPoint('Les réparations rendues nécessaires par la négligence ou le mauvais entretien en cours de location seront à la charge du locataire.');
-    addBulletPoint('Veiller à ce que la tranquillité du voisinage ne soit pas troublée.');
-    addSpace(8);
+            new Paragraph({ text: "Salle de bain", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Douche, lavabo, sèche-serviette chauffant, WC, meuble avec lavabo intégré et mitigeur."),
 
-    checkPageBreak(60);
+            new Paragraph({ text: "Chambre 1", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Lit 160 x 190, 1 table de nuit, 2 tablettes de nuit, placard, téléviseur écran plat frame Samsung de 43 pouces."),
 
-    addSubtitle('ÉQUIPEMENTS ET MOBILIER');
-    addParagraph('Les locaux sont loués meublés avec matériel de cuisine, vaisselle, verrerie, couvertures et oreillers, tels qu\'ils sont dans l\'état descriptif. S\'il y a lieu, le propriétaire ou son représentant seront en droit de réclamer au locataire, à son départ, la valeur totale au prix de remplacement des objets, mobiliers ou matériels cassés, fêlés, ébréchés ou détériorés.');
-    addSpace(8);
+            new Paragraph({ text: "Chambre 2", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Lits 90 x 190, 2 tables de nuit avec lampes de chevet, étagère de rangement, meuble TV, téléviseur Sony 32 pouces avec décodeur, meuble bas de rangement, canapé 2 places."),
 
-    addSubtitle('ASSURANCE');
-    addParagraph('Le locataire s\'engage à s\'assurer contre les risques locatifs (incendie, dégât des eaux). Le défaut d\'assurance, en cas de sinistre, donnera lieu à des dommages et intérêts. Le propriétaire s\'engage à assurer le logement contre les risques locatifs pour le compte du locataire, ce dernier ayant l\'obligation de lui signaler, dans les 24h, tout sinistre survenu dans le logement.');
-    addSpace(8);
+            new Paragraph({ text: "Couloir", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Deux placards dont un avec penderie. Dans un placard, les vannes d'eau permettent de couper complètement l'eau en cas de fuite. Dans le deuxième placard, un extincteur est mis à disposition."),
 
-    addSubtitle('DÉPÔT DE GARANTIE');
-    addParagraph('Le dépôt de garantie sera restitué au départ du locataire sauf en cas de retenue justifiée.');
+            new Paragraph({ text: "Terrasse", font, size: 24, bold: true, spacing: { before: 120, after: 60 } }),
+            createParagraph("Terrasse de 12 m² avec table en verre, 4 chaises et barbecue électrique Weber transportable et sur pied."),
 
-    // ========== PAGE 3: ÉTAT DESCRIPTIF ==========
-    doc.addPage();
-    yPos = 25;
+            createSectionTitle("PRESTATIONS INCLUSES"),
+            createBulletPoint("Linge de maison fourni (Draps fournis)"),
+            createBulletPoint("Chauffage inclus"),
+            createBulletPoint("Ménage de fin de séjour inclus"),
 
-    addTitle('ÉTAT DESCRIPTIF DE LA LOCATION', 15);
-    addSpace(5);
+            createSectionTitle("ACCÈS ET INFORMATIONS PRATIQUES"),
+            createBulletPoint("Entrée indépendante avec accès par escalier en colimaçon. Escalier facile à monter mais déconseillé aux personnes avec des difficultés de mobilité."),
+            createBulletPoint("L'accueil est fait par le propriétaire ou une personne de confiance. Le propriétaire habite dans la maison mitoyenne."),
+            createBulletPoint("Parking : possibilité de garer une voiture devant le garage la journée. Emplacement sécurisé (caméra infrarouge) à l'arrière de la maison pour la nuit."),
+            createBulletPoint("Jacuzzi 6 places situé à côté du parking dans la partie jardin. Utilisation sous votre responsabilité."),
+            createBulletPoint("Terrasse en IPE avec table, 4 chaises et deux transats."),
 
-    addSubtitle('INFORMATIONS GÉNÉRALES');
-    addInfoRow('Adresse :', '9 Résidence du Château Martinsbourg, 68920 WETTOLSHEIM');
-    addInfoRow('Type :', 'Appartement');
-    addInfoRow('Surface habitable :', '68 m²');
-    addSpace(8);
+            // SIGNATURES (moved to end)
 
-    addSubtitle('DÉTAILS DES PIÈCES');
-    addSpace(3);
+            new Table({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: {
+                top: { style: BorderStyle.NONE },
+                bottom: { style: BorderStyle.NONE },
+                left: { style: BorderStyle.NONE },
+                right: { style: BorderStyle.NONE },
+                insideHorizontal: { style: BorderStyle.NONE },
+                insideVertical: { style: BorderStyle.NONE },
+              },
+              rows: [
+                new TableRow({
+                  children: [
+                    new TableCell({
+                      children: [
+                        new Paragraph({ text: "Le Propriétaire", font, bold: true, size: 24 }),
+                        new Paragraph({ text: "Lu et approuvé", font, italics: true, size: baseSize, spacing: { before: 720 } }),
+                      ],
+                    }),
+                    new TableCell({
+                      children: [
+                        new Paragraph({ text: "Le Locataire", font, bold: true, alignment: AlignmentType.RIGHT, size: 24 }),
+                        new Paragraph({ text: "Lu et approuvé", font, italics: true, alignment: AlignmentType.RIGHT, size: baseSize, spacing: { before: 720 } }),
+                      ],
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Cuisine', margin, yPos);
-    yPos += 5;
-    addParagraph('Table en verre avec 4 chaises, lave-vaisselle, lave-linge, sèche-linge, plaque à induction, réfrigérateur avec congélateur, micro-ondes avec four, évier avec mitigeur, cafetière, vaisselle neuve, climatisation et chauffage DAIKIN avec télécommande, meubles de rangement.');
-    addSpace(5);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Salon', margin, yPos);
-    yPos += 5;
-    addParagraph('Canapé 3 places avec couchage de 1,60 mètres pour 2 personnes, chaîne hifi, téléviseur écran plat avec fibre, meuble TV, 3 tables de salon, grand placard avec coffre sécurisé, climatisation et chauffage DAIKIN avec télécommande.');
-    addSpace(5);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Salle de bain', margin, yPos);
-    yPos += 5;
-    addParagraph('Douche, lavabo, sèche-serviette chauffant, WC, meuble avec lavabo intégré et mitigeur.');
-    addSpace(5);
-
-    checkPageBreak(60);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Chambre 1', margin, yPos);
-    yPos += 5;
-    addParagraph('Lit 160 x 190, 1 table de nuit, 2 tablettes de nuit, placard, téléviseur écran plat frame Samsung de 43 pouces.');
-    addSpace(5);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Chambre 2', margin, yPos);
-    yPos += 5;
-    addParagraph('Lits 90 x 190, 2 tables de nuit avec lampes de chevet, étagère de rangement, meuble TV, téléviseur Sony 32 pouces avec décodeur, meuble bas de rangement, canapé 2 places.');
-    addSpace(5);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Couloir', margin, yPos);
-    yPos += 5;
-    addParagraph('Deux placards dont un avec penderie. Dans un placard, les vannes d\'eau permettent de couper complètement l\'eau en cas de fuite. Dans le deuxième placard, un extincteur est mis à disposition.');
-    addSpace(5);
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('Terrasse', margin, yPos);
-    yPos += 5;
-    addParagraph('Terrasse de 12 m² avec table en verre, 4 chaises et barbecue électrique Weber transportable et sur pied.');
-    addSpace(8);
-
-    addSubtitle('PRESTATIONS INCLUSES');
-    addSpace(3);
-
-    checkPageBreak(40);
-
-    // Encadré prestations
-    doc.setFillColor(250, 248, 243);
-    doc.roundedRect(margin, yPos, maxWidth, 28, 3, 3, 'F');
-    yPos += 7;
-
-    const prestationX = margin + 8;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(...darkGray);
-    doc.text('✓ Linge de maison fourni', prestationX, yPos);
-    doc.text('✓ Draps fournis', prestationX + 85, yPos);
-    yPos += 6;
-    doc.text('✓ Chauffage', prestationX, yPos);
-    doc.text('✓ Ménage de fin de séjour', prestationX + 85, yPos);
-    yPos += 12;
-
-    addSpace(8);
-
-    addSubtitle('ACCÈS ET INFORMATIONS PRATIQUES');
-    addBulletPoint('Entrée indépendante avec accès par escalier en colimaçon. Escalier facile à monter mais déconseillé aux personnes avec des difficultés de mobilité.');
-    addBulletPoint('L\'accueil est fait par le propriétaire ou une personne de confiance. Le propriétaire habite dans la maison mitoyenne.');
-    addBulletPoint('Parking : possibilité de garer une voiture devant le garage la journée. Emplacement sécurisé (caméra infrarouge) à l\'arrière de la maison pour la nuit.');
-    addBulletPoint('Jacuzzi 6 places situé à côté du parking dans la partie jardin. Utilisation sous votre responsabilité.');
-    addBulletPoint('Terrasse en IPE avec table, 4 chaises et deux transats.');
-    addSpace(15);
-
-    // Signatures finales
-    checkPageBreak(30);
-    addSeparator();
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(...darkGray);
-    doc.text('Le Propriétaire', margin + 15, yPos);
-    doc.text('Le Locataire', pageWidth - margin - 35, yPos);
-    yPos += 15;
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(...lightGray);
-    doc.text('Lu et approuvé', pageWidth - margin - 30, yPos);
-
-    // Sauvegarder le PDF
-    const fileName = `Contrat_${data.clientLastName}_${data.checkInDate.replace(/\//g, '-')}.pdf`;
-    doc.save(fileName);
+    Packer.toBlob(doc).then((blob) => {
+      saveAs(blob, `Contrat_${data.clientLastName}_${data.checkInDate.replace(/\//g, '-')}.docx`);
+    });
   };
 
   return { generatePDF };

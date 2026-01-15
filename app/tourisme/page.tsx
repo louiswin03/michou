@@ -16,6 +16,7 @@ import {
   Bike,
   TramFront,
   TreePine,
+  Car,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -125,15 +126,16 @@ const activities = [
     title: "Marchés de Noël",
     description: "Colmar, Riquewihr, Kaysersberg... Les plus beaux marchés de Noël d'Europe (décembre).",
   },
-  {
-    icon: Church,
-    title: "Villages Typiques",
-    description: "Explorez les villages alsaciens authentiques et leurs traditions ancestrales.",
-  },
+
   {
     icon: TreePine,
     title: "Nature & Forêts",
     description: "Parc naturel des Ballons des Vosges, forêts, lacs et panoramas exceptionnels.",
+  },
+  {
+    icon: Car,
+    title: "Musées & Loisirs",
+    description: "Musée de l'Automobile, Cité du Train (Mulhouse), ou Europa-Park à proximité.",
   },
 ]
 
