@@ -185,7 +185,7 @@ export default function TourismePage() {
             />
           </div>
           <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-            <span className="text-gold font-serif text-lg tracking-[0.3em] uppercase mb-4">La Région</span>
+            <span className="text-white drop-shadow-md font-serif text-lg tracking-[0.3em] uppercase mb-4">La Région</span>
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-white max-w-4xl">
               Découvrez l'Alsace Authentique
             </h1>

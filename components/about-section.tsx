@@ -25,7 +25,7 @@ export default function AboutSection() {
               Un écrin de douceur sur la Route des Vins
             </h2>
             <p className="mt-6 text-taupe text-lg leading-relaxed">
-              Niché au cœur de Wettolsheim, notre gîte vous accueille dans un cadre enchanteur avec des vues imprenables
+              Niché au cœur du village de Wettolsheim, notre gîte vous accueille dans un cadre enchanteur avec des vues imprenables
               sur le vignoble, le village et la Forêt Noire. Situé au premier étage avec entrée indépendante, dans un
               parc de 2500 m² au calme absolu.
             </p>

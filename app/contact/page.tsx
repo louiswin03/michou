@@ -51,6 +51,12 @@ export default function ContactPage() {
               <p className="mt-4 text-taupe text-lg max-w-2xl mx-auto">
                 Obtenez une estimation personnalisée en quelques clics. Tarif dégressif selon la durée de votre séjour.
               </p>
+
+              <div className="mt-6 flex justify-center">
+                <p className="text-sm sm:text-base text-slate font-medium bg-gold/10 px-6 py-2 rounded-full inline-block border border-gold/20">
+                  💎 Réservez en direct et économisez 20% (sans frais de plateforme, meilleur tarif garanti)
+                </p>
+              </div>
             </div>
 
             <QuoteCalculator />
@@ -98,10 +104,10 @@ export default function ContactPage() {
                 </div>
                 <h3 className="font-serif text-xl text-slate mb-3">Email</h3>
                 <a
-                  href="mailto:contact@ecrin-vignoble.fr"
+                  href="mailto:lexcellent.michel@orange.fr"
                   className="text-taupe hover:text-gold transition-colors break-all"
                 >
-                  contact@ecrin-vignoble.fr
+                  lexcellent.michel@orange.fr
                 </a>
               </div>
 
@@ -213,7 +219,7 @@ export default function ContactPage() {
                 Nous Appeler
               </a>
               <a
-                href="mailto:contact@ecrin-vignoble.fr"
+                href="mailto:lexcellent.michel@orange.fr"
                 className="px-8 py-4 bg-gold text-cream font-medium tracking-wide rounded-full hover:bg-gold-dark transition-all"
               >
                 Nous Écrire

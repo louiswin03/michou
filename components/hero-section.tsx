@@ -22,7 +22,7 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
-        <span className="text-gold font-serif text-base sm:text-lg md:text-xl tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4 animate-fade-in">
+        <span className="text-white drop-shadow-md font-serif text-base sm:text-lg md:text-xl tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4 animate-fade-in">
           Wettolsheim — Alsace
         </span>
         <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white max-w-4xl leading-tight px-2">
@@ -48,12 +48,11 @@ export default function HeroSection() {
           </Link>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/50 rounded-full flex justify-center pt-1.5 sm:pt-2">
-            <div className="w-1 h-2 sm:h-3 bg-white/70 rounded-full" />
-          </div>
-        </div>
+        <p className="mt-6 text-sm sm:text-base text-white/90 font-medium bg-black/30 px-4 py-2 rounded-full backdrop-blur-sm animate-fade-in-up">
+          💎 Réservez en direct et économisez 20% (sans frais de plateforme, meilleur tarif garanti)
+        </p>
+
+
       </div>
     </section>
   )

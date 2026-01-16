@@ -170,7 +170,7 @@ export default function GitePage() {
             />
           </div>
           <div className="relative h-full flex flex-col items-center justify-center text-center px-4 sm:px-6">
-            <span className="text-gold font-serif text-base sm:text-lg tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4">Le Gîte</span>
+            <span className="text-white drop-shadow-md font-serif text-base sm:text-lg tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4">Le Gîte</span>
             <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white max-w-4xl px-2">
               Un Appartement Pensé pour Votre Confort
             </h1>
@@ -309,7 +309,7 @@ export default function GitePage() {
                 <div className="space-y-4 text-taupe leading-relaxed">
                   <p>
                     Une <strong>première chambre de 12 m²</strong> comporte un lit de 160 cm avec une TV Samsung Frame
-                    pour vos moments de détente.
+                    pour vos moments de détente. De nombreux rangements sont disponibles.
                   </p>
                   <p>
                     Une <strong>deuxième chambre très grande</strong> comporte deux lits de 90 cm formant un seul grand
