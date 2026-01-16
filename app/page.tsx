@@ -33,7 +33,7 @@ const features = [
   {
     icon: Home,
     title: "Le Gîte",
-    description: "2 chambres, jacuzzi 6 places, salon spacieux, cuisine équipée, 4 personnes",
+    description: "2 chambres, jacuzzi 6 places, salon spacieux, cuisine équipée, 4 personnes, nombreux rangements",
     href: "/gite",
   },
   {
