@@ -19,7 +19,7 @@ const client = createClient({
 })
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://lecrinduvignoble.alsace' // Updated to the domain user mentioned/implied. Or fallback to Vercel URL.
+    const baseUrl = 'https://lecrinduvignoble.fr' // Updated to the domain user mentioned/implied. Or fallback to Vercel URL.
 
     // Static routes
     const routes = [

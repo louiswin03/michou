@@ -31,13 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title,
         description,
         alternates: {
-            canonical: `https://lecrinduvignoble.alsace/legal/${slug}`,
+            canonical: `https://lecrinduvignoble.fr/legal/${slug}`,
         },
         openGraph: {
             title,
             description,
             type: "website",
-            url: `https://lecrinduvignoble.alsace/legal/${slug}`,
+            url: `https://lecrinduvignoble.fr/legal/${slug}`,
             siteName: "l'écrin du vignoble",
             locale: "fr_FR",
         },

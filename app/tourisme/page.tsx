@@ -68,24 +68,24 @@ export async function generateMetadata(): Promise<Metadata> {
       "châteaux Alsace",
     ],
     alternates: {
-      canonical: "https://lecrinduvignoble.alsace/tourisme",
+      canonical: "https://lecrinduvignoble.fr/tourisme",
     },
     openGraph: {
       title,
       description,
       type: "website",
-      url: "https://lecrinduvignoble.alsace/tourisme",
+      url: "https://lecrinduvignoble.fr/tourisme",
       siteName: "l'écrin du vignoble",
       locale: "fr_FR",
       images: [
         {
-          url: "https://lecrinduvignoble.alsace/images/fall.webp",
+          url: "https://lecrinduvignoble.fr/images/fall.webp",
           width: 1200,
           height: 630,
           alt: "Vue panoramique sur le vignoble alsacien en automne",
         },
         {
-          url: "https://lecrinduvignoble.alsace/images/eguisheim.jpg",
+          url: "https://lecrinduvignoble.fr/images/eguisheim.jpg",
           width: 1200,
           height: 630,
           alt: "Village d'Eguisheim sur la Route des Vins d'Alsace",
@@ -96,7 +96,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://lecrinduvignoble.alsace/images/fall.webp"],
+      images: ["https://lecrinduvignoble.fr/images/fall.webp"],
     },
   }
 }

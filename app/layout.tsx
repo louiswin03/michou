@@ -17,7 +17,10 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "l'écrin du vignoble | Gîte de Charme et Spa en Alsace - Wettolsheim",
+  title: {
+    default: "l'écrin du vignoble | Gîte de Charme et Spa en Alsace - Wettolsheim",
+    template: "%s | l'écrin du vignoble",
+  },
   description:
     "Découvrez notre gîte haut de gamme 4 personnes avec jacuzzi privatif au cœur du vignoble alsacien. À 10 min d'Eguisheim, 5 km de Colmar. Prestations luxe, vue vignoble.",
   keywords: [
@@ -38,19 +41,19 @@ export const metadata: Metadata = {
     title: "l'écrin du vignoble | Gîte de Charme et Spa en Alsace",
     description:
       "Gîte haut de gamme 4 personnes avec jacuzzi privatif au cœur du vignoble alsacien. Vue imprenable, prestations luxe.",
-    url: "https://lecrinduvignoble.alsace",
+    url: "https://lecrinduvignoble.fr",
     siteName: "l'écrin du vignoble",
     locale: "fr_FR",
     type: "website",
     images: [
       {
-        url: "https://lecrinduvignoble.alsace/images/salon.webp",
+        url: "https://lecrinduvignoble.fr/images/salon.webp",
         width: 1200,
         height: 630,
         alt: "Salon lumineux du gîte l'écrin du vignoble avec vue sur le vignoble alsacien",
       },
       {
-        url: "https://lecrinduvignoble.alsace/images/jaccuzi.jpeg",
+        url: "https://lecrinduvignoble.fr/images/jaccuzi.jpeg",
         width: 1200,
         height: 630,
         alt: "Jacuzzi privatif du gîte l'écrin du vignoble en Alsace",
@@ -62,11 +65,11 @@ export const metadata: Metadata = {
     title: "l'écrin du vignoble | Gîte de Charme et Spa en Alsace",
     description:
       "Gîte haut de gamme 4 personnes avec jacuzzi privatif au cœur du vignoble alsacien. Vue imprenable, prestations luxe.",
-    images: ["https://lecrinduvignoble.alsace/images/salon.webp"],
+    images: ["https://lecrinduvignoble.fr/images/salon.webp"],
   },
-  metadataBase: new URL("https://lecrinduvignoble.alsace"),
+  metadataBase: new URL("https://lecrinduvignoble.fr"),
   alternates: {
-    canonical: "https://lecrinduvignoble.alsace",
+    canonical: "https://lecrinduvignoble.fr",
   },
   robots: {
     index: true,
@@ -90,7 +93,6 @@ export const metadata: Metadata = {
       { url: "/apple-touch-icon.png", sizes: "180x180" },
     ],
   },
-  generator: 'v0.app'
 }
 
 import JsonLd from "@/components/json-ld"

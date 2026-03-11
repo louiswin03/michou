@@ -22,10 +22,11 @@ export async function POST(req: Request) {
 
         // Mail options
         const mailOptions = {
-            from: '"Michou Gîte" <winkelmullerl@gmail.com>', // L'expéditeur DOIT être le compte Gmail authentifié
+            from: '"L écrin du vignoble" <winkelmullerl@gmail.com>', // L'expéditeur DOIT être le compte Gmail authentifié
             to: 'lexcellent.michel@orange.fr', // Le destinataire final (Orange)
             subject: `Nouveau Contrat de Location - ${data.clientLastName} ${data.clientFirstName}`,
             text: `
+            
 Bonjour,
 
 Veuillez trouver ci-joint le contrat de location pour le séjour de ${data.clientFirstName} ${data.clientLastName}.

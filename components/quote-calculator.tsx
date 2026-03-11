@@ -121,6 +121,7 @@ export default function QuoteCalculator() {
       totalPrice: quote.baseTotal,
       depositAmount: quote.depositAmount,
       balanceAmount: quote.balanceAmount,
+      securityDeposit: quote.securityDeposit,
       contractDate: new Date().toLocaleDateString("fr-FR"),
       nights: quote.nights,
       cleaningFee: quote.cleaningFee,

@@ -80,24 +80,24 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     keywords,
     alternates: {
-      canonical: "https://lecrinduvignoble.alsace",
+      canonical: "https://lecrinduvignoble.fr",
     },
     openGraph: {
       title,
       description,
       type: "website",
-      url: "https://lecrinduvignoble.alsace",
+      url: "https://lecrinduvignoble.fr",
       siteName: "l'écrin du vignoble",
       locale: "fr_FR",
       images: [
         {
-          url: "https://lecrinduvignoble.alsace/images/salon.webp",
+          url: "https://lecrinduvignoble.fr/images/salon.webp",
           width: 1200,
           height: 630,
           alt: "Gîte l'écrin du vignoble - Salon lumineux avec vue sur le vignoble alsacien",
         },
         {
-          url: "https://lecrinduvignoble.alsace/images/jaccuzi.jpeg",
+          url: "https://lecrinduvignoble.fr/images/jaccuzi.jpeg",
           width: 1200,
           height: 630,
           alt: "Jacuzzi privatif 6 places du gîte en Alsace",
@@ -108,7 +108,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://lecrinduvignoble.alsace/images/salon.webp"],
+      images: ["https://lecrinduvignoble.fr/images/salon.webp"],
     },
   }
 }

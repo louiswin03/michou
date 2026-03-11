@@ -26,18 +26,18 @@ export async function generateMetadata(): Promise<Metadata> {
       "tarifs gîte Alsace",
     ],
     alternates: {
-      canonical: "https://lecrinduvignoble.alsace/contact",
+      canonical: "https://lecrinduvignoble.fr/contact",
     },
     openGraph: {
       title,
       description,
       type: "website",
-      url: "https://lecrinduvignoble.alsace/contact",
+      url: "https://lecrinduvignoble.fr/contact",
       siteName: "l'écrin du vignoble",
       locale: "fr_FR",
       images: [
         {
-          url: "https://lecrinduvignoble.alsace/images/salon.webp",
+          url: "https://lecrinduvignoble.fr/images/salon.webp",
           width: 1200,
           height: 630,
           alt: "Gîte l'écrin du vignoble - Réservez votre séjour en Alsace",
@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://lecrinduvignoble.alsace/images/salon.webp"],
+      images: ["https://lecrinduvignoble.fr/images/salon.webp"],
     },
   }
 }

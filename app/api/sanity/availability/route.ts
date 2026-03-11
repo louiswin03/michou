@@ -173,6 +173,12 @@ export async function GET(request: Request) {
       )
     }
 
+    // Vérifier le jour spécifique du check-in (PRIORITAIRE - écrase la période)
+    const checkInDayPrice = dayPricings.find(d => d.date === startDate)
+    if (checkInDayPrice && checkInDayPrice.minimumNights !== undefined && checkInDayPrice.minimumNights !== null) {
+      minimumNights = checkInDayPrice.minimumNights
+    }
+
     // Vérifier si le séjour respecte le minimum
     if (nights < minimumNights) {
       return NextResponse.json({

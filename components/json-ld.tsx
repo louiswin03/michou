@@ -8,10 +8,16 @@ export default async function JsonLd() {
     const lodgingBusinessSchema = {
         "@context": "https://schema.org",
         "@type": "LodgingBusiness",
-        "@id": "https://lecrinduvignoble.alsace/#lodgingbusiness",
+        "@id": "https://lecrinduvignoble.fr/#lodgingbusiness",
         name: footer?.brandTitle || "l'écrin du vignoble",
         description: footer?.brandDescription || "Gîte de charme haut de gamme avec jacuzzi privatif en Alsace, au cœur du vignoble à Wettolsheim.",
-        url: "https://lecrinduvignoble.alsace",
+        url: "https://lecrinduvignoble.fr",
+        logo: {
+            "@type": "ImageObject",
+            url: "https://lecrinduvignoble.fr/favicon-96x96.png",
+            width: 96,
+            height: 96
+        },
         telephone: footer?.phone || "+33681842554",
         email: footer?.email || "lexcellent.michel@orange.fr",
         address: {
@@ -38,11 +44,11 @@ export default async function JsonLd() {
         ],
         priceRange: "€€€",
         image: [
-            "https://lecrinduvignoble.alsace/images/salon.webp",
-            "https://lecrinduvignoble.alsace/images/jaccuzi.jpeg",
-            "https://lecrinduvignoble.alsace/images/chambre1.jpeg",
-            "https://lecrinduvignoble.alsace/images/cuisine.jpeg",
-            "https://lecrinduvignoble.alsace/images/salon_nuit.webp"
+            "https://lecrinduvignoble.fr/images/salon.webp",
+            "https://lecrinduvignoble.fr/images/jaccuzi.jpeg",
+            "https://lecrinduvignoble.fr/images/chambre1.jpeg",
+            "https://lecrinduvignoble.fr/images/cuisine.jpeg",
+            "https://lecrinduvignoble.fr/images/salon_nuit.webp"
         ],
         starRating: {
             "@type": "Rating",
@@ -58,12 +64,12 @@ export default async function JsonLd() {
     const websiteSchema = {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "@id": "https://lecrinduvignoble.alsace/#website",
+        "@id": "https://lecrinduvignoble.fr/#website",
         name: "l'écrin du vignoble",
-        url: "https://lecrinduvignoble.alsace",
+        url: "https://lecrinduvignoble.fr",
         description: "Gîte de charme avec jacuzzi privatif en Alsace, sur la Route des Vins",
         publisher: {
-            "@id": "https://lecrinduvignoble.alsace/#lodgingbusiness"
+            "@id": "https://lecrinduvignoble.fr/#lodgingbusiness"
         },
         inLanguage: "fr-FR"
     }
@@ -77,31 +83,31 @@ export default async function JsonLd() {
                 "@type": "ListItem",
                 position: 1,
                 name: "Accueil",
-                item: "https://lecrinduvignoble.alsace"
+                item: "https://lecrinduvignoble.fr"
             },
             {
                 "@type": "ListItem",
                 position: 2,
                 name: "Le Gîte",
-                item: "https://lecrinduvignoble.alsace/gite"
+                item: "https://lecrinduvignoble.fr/gite"
             },
             {
                 "@type": "ListItem",
                 position: 3,
                 name: "Tourisme",
-                item: "https://lecrinduvignoble.alsace/tourisme"
+                item: "https://lecrinduvignoble.fr/tourisme"
             },
             {
                 "@type": "ListItem",
                 position: 4,
                 name: "Galerie",
-                item: "https://lecrinduvignoble.alsace/galerie"
+                item: "https://lecrinduvignoble.fr/galerie"
             },
             {
                 "@type": "ListItem",
                 position: 5,
                 name: "Contact",
-                item: "https://lecrinduvignoble.alsace/contact"
+                item: "https://lecrinduvignoble.fr/contact"
             }
         ]
     }
@@ -110,9 +116,15 @@ export default async function JsonLd() {
     const localBusinessSchema = {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
-        "@id": "https://lecrinduvignoble.alsace/#localbusiness",
+        "@id": "https://lecrinduvignoble.fr/#localbusiness",
         name: "l'écrin du vignoble - Gîte de Charme",
-        image: "https://lecrinduvignoble.alsace/images/salon.webp",
+        image: "https://lecrinduvignoble.fr/images/salon.webp",
+        logo: {
+            "@type": "ImageObject",
+            url: "https://lecrinduvignoble.fr/favicon-96x96.png",
+            width: 96,
+            height: 96
+        },
         telephone: footer?.phone || "+33681842554",
         email: footer?.email || "lexcellent.michel@orange.fr",
         address: {
@@ -127,7 +139,7 @@ export default async function JsonLd() {
             latitude: 48.0567,
             longitude: 7.2997
         },
-        url: "https://lecrinduvignoble.alsace",
+        url: "https://lecrinduvignoble.fr",
         openingHoursSpecification: {
             "@type": "OpeningHoursSpecification",
             dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],

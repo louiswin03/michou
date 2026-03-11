@@ -35,7 +35,7 @@ const legalPages = [
                 style: 'normal',
                 children: [
                     { _type: 'span', text: "Le site internet " },
-                    { _type: 'span', text: "https://lecrinduvignoble.alsace", marks: ['strong'] }, // Placeholder domain if not known
+                    { _type: 'span', text: "https://lecrinduvignoble.fr", marks: ['strong'] }, // Placeholder domain if not known
                     { _type: 'span', text: " (ci-après désigné « le Site ») est édité par :" }
                 ],
             },

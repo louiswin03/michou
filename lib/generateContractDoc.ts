@@ -11,6 +11,7 @@ export interface ContractData {
     totalPrice: number;
     depositAmount: number;
     balanceAmount: number;
+    securityDeposit: number;
     contractDate: string;
     nights: number;
     cleaningFee: number;
@@ -53,6 +54,7 @@ export async function generateContractDoc(data: ContractData): Promise<Buffer> {
             ],
             spacing: { before: 360, after: 240 },
             alignment: AlignmentType.LEFT,
+            keepNext: true,
         });
     };
 
@@ -99,11 +101,24 @@ export async function generateContractDoc(data: ContractData): Promise<Buffer> {
                     new Paragraph({
                         children: [
                             new TextRun({
-                                text: "l'écrin du vignoble - 9 Résidence du Château Martinsbourg",
+                                text: "\"L'écrin du vignoble\"",
                                 font,
-                                size: 24,
+                                size: 26,
                                 italics: true,
                                 color: "444444"
+                            })
+                        ],
+                        alignment: AlignmentType.CENTER,
+                        spacing: { after: 60 },
+                    }),
+                    new Paragraph({
+                        children: [
+                            new TextRun({
+                                text: "& CONDITIONS GÉNÉRALES",
+                                font,
+                                size: 24,
+                                bold: true,
+                                color: "000000"
                             })
                         ],
                         alignment: AlignmentType.CENTER,
@@ -132,66 +147,9 @@ export async function generateContractDoc(data: ContractData): Promise<Buffer> {
 
                     // CONDITIONS FINANCIÈRES
                     createSectionTitle("CONDITIONS FINANCIÈRES"),
-                    // Tableau pour encadrer proprement les finances
-                    new Table({
-                        width: { size: 100, type: WidthType.PERCENTAGE },
-                        borders: {
-                            top: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
-                            bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
-                            left: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
-                            right: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
-                        },
-                        rows: [
-                            new TableRow({
-                                children: [
-                                    new TableCell({
-                                        children: [
-                                            new Paragraph({
-                                                children: [
-                                                    new TextRun({ text: "Prix total du séjour : ", font, size: baseSize, bold: true }),
-                                                    new TextRun({ text: `${data.totalPrice} €`, font, size: 28, bold: true, color: "000000" }),
-                                                ],
-                                                spacing: { before: 120, after: 120 }
-                                            }),
-                                            new Paragraph({
-                                                children: [
-                                                    new TextRun({ text: `Détail : ${data.nights} nuits • Ménage ${data.cleaningFee}€ • Taxe de séjour ${data.touristTax.toFixed(2)}€`, font, size: 20, color: "666666" })
-                                                ],
-                                                spacing: { after: 120 }
-                                            }),
-                                            new Paragraph({
-                                                children: [new TextRun({ text: "Toutes charges et taxes comprises", font, size: baseSize, italics: true })],
-                                                spacing: { after: 240 },
-                                            }),
-                                            new Paragraph({
-                                                children: [new TextRun({ text: `Arrhes versées (30%) : ${data.depositAmount} € (chèque non encaissé)`, font, size: baseSize })]
-                                            }),
-                                            new Paragraph({
-                                                children: [new TextRun({ text: `Solde restant : ${data.balanceAmount} €`, font, size: baseSize })]
-                                            }),
-                                            new Paragraph({
-                                                children: [new TextRun({ text: `Dépôt de garantie : 400 € (chèque non encaissé)`, font, size: baseSize })],
-                                                spacing: { after: 120 }
-                                            }),
-                                        ],
-                                        margins: { top: 200, bottom: 200, left: 200, right: 200 },
-                                    }),
-                                ],
-                            }),
-                        ],
-                    }),
-
-                    new Paragraph({
-                        children: [
-                            new TextRun({ text: `Le solde et le dépôt de garantie seront versés le jour de la remise des clés.`, font, size: baseSize, bold: true })
-                        ],
-                        spacing: { before: 360, after: 240 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `Fait à Wettolsheim, le ${data.contractDate}`, font, size: baseSize })],
-                        alignment: AlignmentType.RIGHT,
-                        spacing: { before: 120, after: 480 },
-                    }),
+                    createParagraph(`Prix du séjour : ${data.totalPrice} Euros toutes charges et taxes comprises.`, true),
+                    createParagraph(`Les arrhes de 30 % ont été versées par le locataire : ${data.depositAmount} Euros.`),
+                    createParagraph(`La somme de ${data.balanceAmount + data.securityDeposit} Euros sera versée le jour de la remise des clés comprenant ${data.securityDeposit} Euros de dépôt de garantie qui sera rendu à la sortie du logement.`),
 
 
                     // CONDITIONS GÉNÉRALES DE LOCATION
@@ -207,11 +165,11 @@ export async function generateContractDoc(data: ContractData): Promise<Buffer> {
                     createParagraph("Les heures d'arrivée sont normalement prévues à partir de 16 h (prévenir par téléphone ou sms 1 heure avant l'arrivée), possibilité d'une arrivée anticipée en fonction de l'occupation du gîte. Les heures de départ sont normalement prévues le matin avant 10 heures (si locataires arrivant le même jour, sinon dans l'après-midi)."),
 
                     createSectionTitle("EN CAS DE DÉSISTEMENT"),
-                    createParagraph("Du locataire : à plus de 15 jours avant la prise d'effet de la location, le locataire perd les arrhes versées."),
+                    createParagraph("Du locataire : à plus de 30 jours avant la prise d'effet de la location, le locataire perd les arrhes versées."),
                     createParagraph("Du propriétaire : à moins d'un mois avant la prise d'effet de la location, il est tenu de verser le double des arrhes au locataire dans les sept jours suivant le désistement."),
 
                     createSectionTitle("RETARD D'ARRIVÉE"),
-                    createParagraph("Si un retard de plus de quatre jours par rapport à la date d'arrivée prévue n'a pas été signalé par le locataire, le propriétaire pourra de bon droit essayer de relouer le logement tout en conservant la faculté de se retourner contre le locataire."),
+                    createParagraph("Si un retard de plus de quatre jours par rapport à la date d'arrivée prévue n'a pas été signalé par le locataire, le propriétaire pourra de bon droit essayer de relouer le logement."),
 
                     createSectionTitle("OBLIGATIONS DU LOCATAIRE"),
                     createBulletPoint("Occuper les lieux personnellement, les habiter en bon père de famille et les entretenir."),
@@ -220,13 +178,13 @@ export async function generateContractDoc(data: ContractData): Promise<Buffer> {
                     createBulletPoint("Veiller à ce que la tranquillité du voisinage ne soit pas troublée."),
 
                     createSectionTitle("ÉQUIPEMENTS ET MOBILIER"),
-                    createParagraph("Les locaux sont loués meublés avec matériel de cuisine, vaisselle, verrerie, couvertures et oreillers, tels qu'ils sont dans l'état descriptif. S'il y a lieu, le propriétaire ou son représentant seront en droit de réclamer au locataire, à son départ, la valeur totale au prix de remplacement des objets, mobiliers ou matériels cassés, fêlés, ébréchés ou détériorés."),
+                    createParagraph("Les locaux sont loués meublés avec matériel de cuisine, vaisselle, verrerie, couvertures et oreillers, tels qu'ils sont dans l'état descriptif. S'il y a lieu, le propriétaire ou son représentant seront en droit de réclamer au locataire, à son départ, la valeur totale au prix de remplacement des objets, mobiliers ou matériels cassés, fêlés, ébréchés ou détériorés et ceux dont l'usure dépasserait la normale pour la durée de la location, le prix de nettoyage des couvertures rendues sales, une indemnité pour les détériorations de toute nature concernant les rideaux, papiers peints, plafonds, tapis, moquette, vitres, literie, etc."),
 
                     createSectionTitle("ASSURANCE"),
-                    createParagraph("Le locataire s'engage à s'assurer contre les risques locatifs (incendie, dégât des eaux). Le défaut d'assurance, en cas de sinistre, donnera lieu à des dommages et intérêts. Le propriétaire s'engage à assurer le logement contre les risques locatifs pour le compte du locataire, ce dernier ayant l'obligation de lui signaler, dans les 24h, tout sinistre survenu dans le logement."),
+                    createParagraph("Le locataire s'engage à s'assurer contre les risques locatifs (incendie, dégât des eaux). Le défaut d'assurance, en cas de sinistre, donnera lieu à des dommages et intérêts. Le propriétaire s'engage à assurer le logement contre les risques locatifs pour le compte du locataire, ce dernier ayant l'obligation de lui signaler, dans les 24h, tout sinistre survenu dans le logement, ses dépendances ou accessoires."),
 
                     createSectionTitle("DÉPÔT DE GARANTIE"),
-                    createParagraph("Le dépôt de garantie sera restitué au départ du locataire sauf en cas de retenue justifiée."),
+                    createParagraph("Le dépôt de garantie sera restitué au départ du locataire sauf en cas de retenue."),
 
                     // ÉTAT DESCRIPTIF
                     new Paragraph({
@@ -271,13 +229,19 @@ export async function generateContractDoc(data: ContractData): Promise<Buffer> {
                     createBulletPoint("Ménage de fin de séjour inclus"),
 
                     createSectionTitle("ACCÈS ET INFORMATIONS PRATIQUES"),
-                    createBulletPoint("Entrée indépendante avec accès par escalier en colimaçon. Escalier facile à monter mais déconseillé aux personnes avec des difficultés de mobilité."),
-                    createBulletPoint("L'accueil est fait par le propriétaire ou une personne de confiance. Le propriétaire habite dans la maison mitoyenne."),
-                    createBulletPoint("Parking : possibilité de garer une voiture devant le garage la journée. Emplacement sécurisé (caméra infrarouge) à l'arrière de la maison pour la nuit."),
-                    createBulletPoint("Jacuzzi 6 places situé à côté du parking dans la partie jardin. Utilisation sous votre responsabilité."),
-                    createBulletPoint("Terrasse en IPE avec table, 4 chaises et deux transats."),
+                    createBulletPoint("Entrée indépendante avec accès par escalier en colimaçon. Escalier facile à monter mais déconseillé aux personnes avec des difficultés de mobilité (personnes plus âgées ou handicapées)."),
+                    createBulletPoint("L'accueil est fait par le propriétaire ou une personne de confiance. Le propriétaire habite dans la maison principale qui est en mitoyenne avec le gîte. La sonnette est située en face avant sur la boîte aux lettres."),
+                    createBulletPoint("Il est possible de garer une voiture devant le garage la journée mais un emplacement de parking est également prévu à l'arrière de la maison (sécurisé par une caméra infrarouge)."),
+                    createBulletPoint("Un garage avec porte télécommandée est disponible pour le stationnement de vélos si besoin."),
+                    createBulletPoint("Le jacuzzi pour 6 adultes se situe à côté du parking dans la partie jardin de la maison. L'utilisation est sous votre responsabilité. Tout accident survenu lors de son utilisation ne peut être incombé au propriétaire."),
+                    createBulletPoint("Vous disposez d'une terrasse en IPE avec une table, 4 chaises et deux transats."),
 
-                    // SIGNATURES (moved to end)
+                    // FAIT À + SIGNATURES (en fin de document)
+                    new Paragraph({
+                        children: [new TextRun({ text: `Fait à WETTOLSHEIM, le ${data.contractDate}`, font, size: baseSize })],
+                        alignment: AlignmentType.LEFT,
+                        spacing: { before: 480, after: 480 },
+                    }),
 
                     new Table({
                         width: { size: 100, type: WidthType.PERCENTAGE },
